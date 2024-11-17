@@ -16,11 +16,11 @@
     - [Objective](#Objective)
     - [Methods](#Methods)
 - [Set up instructions](#Set-up-instructions)
-    - [Step 1: Create an Anaconda Environment](#Step-1:-Create-an-Anaconda-Environment)
-    - [Step 2: Install Required Packages](#Step-2:-Install-Required-Packages)
-    - [step-3: Set up wisper for speech to text](#step-3:-Set-up-wisper-for-speech-to-text)
-    - [Step 4: Obtain a Groq API Key](#Step-4:-Obtain-a-Groq-API-Key)
-    - [Step 5: Configure the `.env` File](#Step-5:-Configure-the-`.env`-File)
+    - [Step 1: Create an Anaconda Environment](#Step-1-Create-an-Anaconda-Environment)
+    - [Step 2: Install Required Packages](#Step-2-Install-Required-Packages)
+    - [step 3: Set up wisper for speech to text](#step-3-Set-up-wisper-for-speech-to-text)
+    - [Step 4: Obtain a Groq API Key](#Step-4-Obtain-a-Groq-API-Key)
+    - [Step 5: Configure the `.env` File](#Step-5-Configure-the-`.env`-File)
 - [Running the application](#Running-the-application)
 
 
