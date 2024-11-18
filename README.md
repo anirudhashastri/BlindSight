@@ -89,15 +89,15 @@ The prototype interface has been carefully designed to meet accessibility requir
 
 ---
 ## Tech Stack
-OS Compatiblity:
+- OS Compatiblity:
     - Windows 
     - Mac
-Language:
+- Language:
     - Python
-Speach to text:
+- Speach to text:
     - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speach to text model built by OpenAI. For our use case we have decided to go with Whisper Tiny.
     - We have spken about the set and instalation of this module below.
-LLM:
+- LLM:
     - We are using Lamma3.1:70B through a API from [Groq](https://console.groq.com/docs/models)
 ---
 
