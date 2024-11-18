@@ -50,22 +50,55 @@ This repository contains the first high-fidelity prototype of the BlindSight pro
 - Accessibility-Driven Design:
   - Clear, speech-compatible prompts.
   - Audio feedback for every command executed.
-- Mode Switching:
-  - Flexibility to operate via voice commands or keyboard inputs.
-- Minimalistic Layout (CLI/Prototype Display):
-  - Ensures clarity and usability for visually impaired users.
+  - Capablity to intrupt the Speach to text to update input from uer usin a single key (Default:Space bar)
+
+
+
+---
+## CLI features
+- Below are the set of commands that work well in the current system without any immediate issues.There are a few tasks
+that are still in devlopment and are not recomended at the current state of the project.
+### Task List
+- changing directory
+- Listing files
+- creating directory ( for ease of implementation we have done this for current working directory and not in any file path provided)
+- Creating a file (docx, text)
+- pwd
+- time
+- Doc reader:
+  - Reading lines
+  - Sumarize content
+  - Delete lines / paragraphs
+  - update and add information 
 
 ---
 
-## Interface Design
+## Interface Design 
 The prototype interface has been carefully designed to meet accessibility requirements:
 1. Voice Interaction Flow:
-   - Supports real-time recognition and execution of commands, with immediate feedback.
+   - Supports real-time recognition and execution of commands, with immediate feedback with the capablity of intrupting based on user requirements.
 2. Document Viewer:
-   - Seamlessly integrates file reading, summarizing, and editing functionalities.
+   - enables the visually diasbled to do the following tasks:
+      -  file reading
+      -  summarizing
+      -  editing functionalities.
 3. Error Handling:
-   - Clear voice and visual alerts in case of invalid commands or errors.
+   - Clear voice alerts in case of invalid commands or errors.
+4. Text to Speach:
+    - We have used a text to speach model so that the user get feedback of all the task that thay are doing on the system.
 
+---
+## Tech Stack
+OS Compatiblity:
+    - Windows 
+    - Mac
+Language:
+    - Python
+Speach to text:
+    - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speach to text model built by OpenAI. For our use case we have decided to go with Whisper Tiny.
+    - We have spken about the set and instalation of this module below.
+LLM:
+    - We are using Lamma3.1:70B through a API from [Groq](https://console.groq.com/docs/models)
 ---
 
 ## Feedback Plan
