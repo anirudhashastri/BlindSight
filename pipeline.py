@@ -33,17 +33,73 @@ else:
 # Intent recognition using LLM
 def recognize_intent_with_llm(command):
     prompt = [
-        {
-    "role": "system",
-    "content": f'''"Identify the intent of the command and respond with one of these labels:\n"
-        "Bash command execution, Document Operation.\n
-        eg: Open my txt file Money: Document Operation\n
-        Change my directory: Bash command"
-        "Respond only with the intent label and nothing else."'''
-        },
- # Always include the system prompt first
-        {"role": "user", "content": command}  # Then the user request
-    ]
+    {
+        "role": "system",
+        "content": f'''
+Identify the intent of the command and respond with one of these labels:
+Bash command execution, Document Operation.
+
+CRUD operations such as Read and Update are categorized as Document Operation. File-level actions such as Delete or Rename are categorized as Bash command execution.
+
+Examples:
+- Open my txt file Money: Document Operation
+- Read the file report.docx: Document Operation
+- Update the content in tasks.txt: Document Operation
+- Delete my notes file: Bash command execution
+- Rename the document project.pdf: Bash command execution
+- Edit the file summary.docx: Document Operation
+- Undo changes in tasks.csv: Document Operation
+- Remove the file old_data.txt: Bash command execution
+
+Respond only with the intent label and nothing else.
+'''
+    },
+    {
+        "role": "user",
+        "content": "Open the document report.docx"
+    },
+    {
+        "role": "assistant",
+        "content": "Document Operation"
+    },
+    {
+        "role": "user",
+        "content": "Delete the file logs.txt"
+    },
+    {
+        "role": "assistant",
+        "content": "Bash command execution"
+    },
+    {
+        "role": "user",
+        "content": "Edit my tasks file"
+    },
+    {
+        "role": "assistant",
+        "content": "Document Operation"
+    },
+    {
+        "role": "user",
+        "content": "Remove the file backup.txt"
+    },
+    {
+        "role": "assistant",
+        "content": "Bash command execution"
+    },
+    {
+        "role": "user",
+        "content": "Undo changes in my notes.txt"
+    },
+    {
+        "role": "assistant",
+        "content": "Document Operation"
+    },
+    # User's input command dynamically added here
+    {
+        "role": "user",
+        "content": command  # Replace 'command' with the actual user input dynamically
+    }
+]
     
   
     response = client.chat.completions.create(
@@ -218,7 +274,7 @@ def ReadSolution(question,result):
             "content": '''You are given bash command and its response. Make it suitable for reading. For example if the bash command is ls and the response 
             is a list of contents of a directory, you should reply it as Here are the files, File1.txt, file2.pdf. For path related responses - if the response is x/y/s you should 
             give you are in s in y in x. If it a list command, identify the folders and files and arrange them accordingly.
-            Enchance it appropriate for a text to speech. 
+            Enchance it appropriate for a text to speech.DO NOT GIVE ANYTHING EXTRA, IF COMMAND DOES NOT MAKE SENSE, GIVE ERROR SAYING 'SORRY, GIVE DOCUMENT COMMANDS ONLY.'. 
 '''
         },
         {"role": "user", "content": question + "Ans :\n" + result}

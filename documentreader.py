@@ -71,6 +71,7 @@ def write_docx(file_path, content):
             file.write(content)
     except Exception as e:
         print(f"Error writing to file {file_path}: {e}")
+        raise FileNotFoundError
 
 def doc_operations(document, command):
     """Processes the document content with Groq API."""
@@ -127,12 +128,16 @@ def doc_main(command, speech_recog):
     print(f"Filename is {filename}\n")
 
     while True:
-        document_content = read_docx(filename=filename)
-        if document_content is None:
-            speak("Failed to read the document.")
-            return
-        else:
-            speak("Document is now open, what would you like to do")
+        try:
+            document_content = read_docx(filename=filename)
+            if document_content is None:
+                speak("There is no content to read. What would you like to do?")
+            else:
+                speak("Document is now open, what would you like to do")
+        except:
+                speak("Error reading file")
+                return
+        
 
         speech_recog.record_audio("audio_sample.wav", duration=7)
         command = speech_recog.process_audio_with_whisper("audio_sample.wav")
@@ -142,11 +147,13 @@ def doc_main(command, speech_recog):
             return
 
         # Perform operation
-        
-        updated_content = doc_operations(document_content, command)
+        elif 'read' in command.lower():
+            speak(document_content)
+        else:
+            updated_content = doc_operations(document_content, command)
         if updated_content is None:
             speak("Operation failed.")
-        elif "summary" in command.lower() or "summarize" in command.lower() or "read" in command.lower():
+        elif "summary" in command.lower() or "summarize" in command.lower():
             speak(updated_content)
         elif updated_content != None:
             write_docx(filename, updated_content)

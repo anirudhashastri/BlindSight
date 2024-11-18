@@ -85,8 +85,8 @@ class STT:
             file_path (str): The full path to the WAV file to be processed.
         """
         # Define the path to the main binary and the model
-        main_path = "/Users/tejusd/Documents/AI for HCI/Final Project/whisper.cpp/main"
-        model_path = "/Users/tejusd/Documents/AI for HCI/Final Project/whisper.cpp/models/ggml-tiny.en.bin"
+        main_path = os.environ['WHISPER_MAIN_PATH']
+        model_path = os.environ['WHISPER_MODEL_PATH']
 
         # Check if the WAV file exists
         if not os.path.isfile(file_path):
