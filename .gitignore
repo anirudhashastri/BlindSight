@@ -1,2 +1,4 @@
 # Ignore the vosk model files
 Vosk_Models/
+whisper_cpp/
+__pycache__/

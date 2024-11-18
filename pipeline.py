@@ -7,6 +7,10 @@ load_dotenv()
 from TTS import speak
 speech_recog = STT()
 
+
+if "GROQ_API_KEY" not in os.environ:
+    raise RuntimeError("Environment variable GROQ_API_KEY is not set.")
+
 client = Groq(
    api_key=os.environ["GROQ_API_KEY"],
 )
