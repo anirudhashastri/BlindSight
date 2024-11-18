@@ -5,9 +5,13 @@
   ### Mac/Linux
   ### Windows
 
-## Usage (Beta-release) (Include SS and videos)
+## Usage (Prototype) (Include SS and videos)
 
 ## Privacy concerns and details 
 
+## Next Steps
+
 ## Future Scope
+
+## Feedback Plan
 
