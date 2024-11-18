@@ -5,7 +5,7 @@ import subprocess
 from STT import STT
 from TTS import speak
 from documentreader import doc_main
-
+import re
 
 load_dotenv()
 
@@ -39,17 +39,30 @@ def recognize_intent_with_llm(command):
 Identify the intent of the command and respond with one of these labels:
 Bash command execution, Document Operation.
 
-CRUD operations such as Read and Update are categorized as Document Operation. File-level actions such as Delete or Rename are categorized as Bash command execution.
+CRUD operations such as Read and Update are categorized as Document Operation. File-level actions such as Create, Delete or Rename are categorized as Bash command execution.
 
 Examples:
-- Open my txt file Money: Document Operation
-- Read the file report.docx: Document Operation
-- Update the content in tasks.txt: Document Operation
-- Delete my notes file: Bash command execution
-- Rename the document project.pdf: Bash command execution
-- Edit the file summary.docx: Document Operation
-- Undo changes in tasks.csv: Document Operation
-- Remove the file old_data.txt: Bash command execution
+
+1. Command: Open my txt file Money. Response: Document Operation  
+2. Command: Change my directory. Response: Bash command execution  
+3. Command: Create a new document called report. Response: Bash command execution  
+4. Command: Delete the file named draft.txt. Response: Bash command execution  
+5. Command: Open the document project.docx. Response: Document Operation  
+6. Command: List all files in my directory. Response: Bash command execution  
+7. Command: Show me the file notes.txt. Response: Document Operation  
+8. Command: Rename the file budget to budget2024. Response: Bash command execution  
+9. Command: Access the file chapter1.docx. Response: Document Operation  
+10. Command: Create a text file called tasks. Response: Bash command execution  
+11. Command: Load the file presentation.pptx. Response: Document Operation  
+12. Command: Move the file report.docx to the archive folder. Response: Bash command execution  
+13. Command: Edit the file named checklist.txt. Response: Document Operation  
+14. Command: Copy the file agenda.txt to my desktop. Response: Bash command execution  
+15. Command: View the file application.docx. Response: Document Operation  
+16. Command: Create a new text file logs.txt. Response: Bash command execution  
+17. Command: Open the file user_manual.docx. Response: Document Operation  
+18. Command: Delete the document named old_notes.txt. Response: Bash command execution  
+19. Command: Display the contents of the file tasks.txt. Response: Document Operation  
+20. Command: Create a folder named backup. Response: Bash command execution 
 
 Respond only with the intent label and nothing else.
 '''
@@ -64,15 +77,7 @@ Respond only with the intent label and nothing else.
     },
     {
         "role": "user",
-        "content": "Delete the file logs.txt"
-    },
-    {
-        "role": "assistant",
-        "content": "Bash command execution"
-    },
-    {
-        "role": "user",
-        "content": "Edit my tasks file"
+        "content": "Open my txt file Money"
     },
     {
         "role": "assistant",
@@ -80,7 +85,7 @@ Respond only with the intent label and nothing else.
     },
     {
         "role": "user",
-        "content": "Remove the file backup.txt"
+        "content": "Change my directory"
     },
     {
         "role": "assistant",
@@ -88,12 +93,62 @@ Respond only with the intent label and nothing else.
     },
     {
         "role": "user",
-        "content": "Undo changes in my notes.txt"
+        "content": "Create a new document called report"
+    },
+    {
+        "role": "assistant",
+        "content": "Bash command execution"
+    },
+    {
+        "role": "user",
+        "content": "Delete the file named draft.txt"
+    },
+    {
+        "role": "assistant",
+        "content": "Bash command execution"
+    },
+    {
+        "role": "user",
+        "content": "Open the document project.docx"
     },
     {
         "role": "assistant",
         "content": "Document Operation"
     },
+    {
+        "role": "user",
+        "content": "List all files in my directory"
+    },
+    {
+        "role": "assistant",
+        "content": "Bash command execution"
+    },
+    {
+        "role": "user",
+        "content": "Show me the file notes.txt"
+    },
+    {
+        "role": "assistant",
+        "content": "Document Operation"
+    },
+    {
+        "role": "user",
+        "content": "Rename the file budget to budget2024"
+    },
+    {
+        "role": "assistant",
+        "content": "Bash command execution"
+    },
+    {
+        "role": "user",
+        "content": "Access the file chapter1.docx"
+    },
+    {
+        "role": "assistant",
+        "content": "Document Operation"
+    },
+
+
     # User's input command dynamically added here
     {
         "role": "user",
@@ -119,9 +174,10 @@ def generate_bash_command(request,cwd,os_name):
 
 Guidelines:
 
-Respond with only the bash command in the exact format needed, without additional text or assumptions. 
-Interpret all paths as relative to the current working directory  and do not start commands from ~ or any assumed root directory unless explicitly requested.
+Respond with only the bash command in the exact format needed, without additional text or assumptions.
+Interpret all paths as relative to the current working directory and do not start commands from ~ or any assumed root directory unless explicitly requested.
 If the request is unrelated to file system tasks, respond with exactly: "I only generate bash commands for file system tasks."
+For create-related commands, ensure the bash command is in lowercase and that any file names created are also in lowercase..
 '''
 },  # Always include the system prompt first
         {"role": "user", "content": request}  # Then the user request
@@ -289,13 +345,19 @@ def ReadSolution(question,result):
     return explainedError
 
 speak("I can now start assisting you!")
+
+
+terminate_regex = r"^(?i)(end|quit|stop)"
 while(True):
 
     speech_recog.record_audio("audio_sample.wav", duration=7)
     command  = speech_recog.process_audio_with_whisper("audio_sample.wav")
     print(command)
-    if command is None or "end" in command:
+    
+    if re.match(terminate_regex, command):
+
         break
+
     intent = recognize_intent_with_llm(command)
     if intent == "Document Operation":
         doc_main(command,speech_recog=speech_recog)
