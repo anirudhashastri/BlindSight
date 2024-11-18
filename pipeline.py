@@ -3,8 +3,13 @@ from groq import Groq
 from dotenv import load_dotenv
 import subprocess
 from STT import STT
-load_dotenv()
 from TTS import speak
+from documentreader import doc_main
+
+
+load_dotenv()
+
+
 speech_recog = STT()
 
 client = Groq(
@@ -24,6 +29,31 @@ else:
     os_name = 'Unix/Linux'
 
 
+
+# Intent recognition using LLM
+def recognize_intent_with_llm(command):
+    prompt = [
+        {
+    "role": "system",
+    "content": f'''"Identify the intent of the command and respond with one of these labels:\n"
+        "Bash command execution, Document Operation.\n
+        eg: Open my txt file Money: Document Operation\n
+        Change my directory: Bash command"
+        "Respond only with the intent label and nothing else."'''
+        },
+ # Always include the system prompt first
+        {"role": "user", "content": command}  # Then the user request
+    ]
+    
+  
+    response = client.chat.completions.create(
+        messages=prompt,
+        model="llama3-70b-8192"
+    )
+    
+    # Extract and return the bash command
+    bash_command = response.choices[0].message.content
+    return bash_command
 
 def generate_bash_command(request,cwd,os_name):
     messages = [
@@ -187,7 +217,7 @@ def ReadSolution(question,result):
             "role": "system",
             "content": '''You are given bash command and its response. Make it suitable for reading. For example if the bash command is ls and the response 
             is a list of contents of a directory, you should reply it as Here are the files, File1.txt, file2.pdf. For path related responses - if the response is x/y/s you should 
-            give you are in s in y in x
+            give you are in s in y in x. If it a list command, identify the folders and files and arrange them accordingly.
             Enchance it appropriate for a text to speech. 
 '''
         },
@@ -202,7 +232,7 @@ def ReadSolution(question,result):
     explainedError = response.choices[0].message.content.strip()
     return explainedError
 
-
+speak("I can now start assisting you!")
 while(True):
 
     speech_recog.record_audio("audio_sample.wav", duration=7)
@@ -210,7 +240,11 @@ while(True):
     print(command)
     if command is None or "end" in command:
         break
-     
-    response = ReadSolution(command,pipeline(command))
-    print( "Response : ",response)
-    speak(response)
+    intent = recognize_intent_with_llm(command)
+    if intent == "Document Operation":
+        doc_main(command,speech_recog=speech_recog)
+        speak("you are now back in you OS")
+    else:
+        response = ReadSolution(command,pipeline(command))
+        print( "Response : ",response)
+        speak(response)
