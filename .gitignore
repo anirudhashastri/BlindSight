@@ -2,3 +2,6 @@
 Vosk_Models/
 whisper_cpp/
 __pycache__/
+input_audio.wav
+output_audio.mp3
+test.ipynb
