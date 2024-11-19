@@ -274,6 +274,9 @@ Whisper is all set!
   1.**Clone the Whisper CPP Repository:**
 
     Open Command Prompt in the blindsight folder and run:
+    ```bash
+        git clone https://github.com/ggerganov/whisper.cpp.git
+    ```
 
       ```bash
         git clone https://github.com/ggerganov/whisper.cpp.git
