@@ -141,6 +141,13 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
 
 ## Set up instructions
 
+### Pre-requisities
+- python 3.10
+- Good microphone and speakers
+- Ram Recomended: 16Gb , Minimum:8Gb
+- Whisper Installation (Follow our wisper instalation guide)
+  
+
 ### Step 1: Create an Anaconda Environment
 
 1. Open your terminal or Anaconda Prompt install [Anaconda](https://docs.anaconda.com/anaconda/install/) for your system .
