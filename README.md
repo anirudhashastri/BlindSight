@@ -254,7 +254,15 @@ Whisper is all set!
   3) Groq api key entered
 - Now to run the pipeline 
 ```bash
-  python pipline.py
+  python pipeline.py
    ```
+- If this doesnt work try
+  1) Mac OS
+     ```bash
+      sudo python pipeline.py
+     ```
+  2) Windows
+    - run comand promt as administrator
+
 
 
