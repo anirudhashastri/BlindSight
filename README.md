@@ -104,8 +104,8 @@ The prototype interface has been carefully designed to meet accessibility requir
 - Language:
     - Python 3.10
 - Speach to text:
-    - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speach to text model built by OpenAI. For our use case we have decided to go with Whisper Tiny.
-    - We have spken about the set and instalation of this module below.
+    - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speech to text model developed by OpenAI. For our use case we have decided to go with Whisper Tiny.
+    - We have spoken about the set and instalation of this module below.
 - LLM:
     - We are using Lamma3.1:70B through a API from [Groq](https://console.groq.com/docs/models).
     - Though we are using an LLM API key in some key places due to time shortage but we wil evetually be using a local LLM to improve scerity
@@ -243,7 +243,106 @@ Make sure to pass the absolute path of these files as relative paths will cause 
 Whisper is all set!
 
 #### Windows
-# TODO: Desai will add this part
+
+
+**Prerequisites:**
+
+Ensure the following tools are installed and added to your system's `PATH`:
+
+1. **Git** [Download Git](https://www.simplilearn.com/tutorials/git-tutorial/git-installation-on-windows)
+
+2. **CMake** [Download CMake](https://cgold.readthedocs.io/en/latest/first-step/installation.html#windows)
+
+3. **MSBuild Tools for C++ Development** (includes the C++ compiler) [Download MSBuild Tools](https://learn.microsoft.com/en-us/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2019)
+4. **FFmpeg**
+
+**Steps to Set Up Whisper CPP on Windows:**
+
+1. **Clone the Whisper CPP Repository:**
+
+    Open Command Prompt in the blindsight folder and run:
+
+    ```bash
+    git clone https://github.com/ggerganov/whisper.cpp.git
+    ```
+
+2. **Navigate to the Repository Directory:**
+
+    ```bash
+    cd whisper.cpp
+    ```
+
+3. **Generate Build Files with CMake:**
+
+    ```bash
+    cmake . --fresh
+    ```
+
+4. **Build the Project Using MSBuild:**
+
+    ```bash
+    msbuild ALL_BUILD.vcxproj /p:Configuration=Release
+    ```
+
+5. **Navigate to the Models Directory:**
+
+    ```bash
+    cd models
+    ```
+
+6. **Download the Whisper Model:**
+
+    ```bash
+    curl -L https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin?download=true -o models\ggml-tiny.en.bin
+    ```
+
+7. **Copy Build Files:**
+
+    - **Option 1:** Using Command Prompt, copy all files from `bin\Release` to the `whisper.cpp` directory:
+
+        ```bash
+        xcopy /E /I bin\Release\* ..\
+        ```
+
+    - **Option 2:** Alternatively, manually copy the files using File Explorer.
+
+8. **Run the Whisper CPP Executable:**
+
+    Ensure you're in the `whisper.cpp` directory and execute:
+
+    ```bash
+    main -m models\ggml-base.bin -f samples\jfk.wav -t 8
+
+
+    ```
+
+    **Expected Output:**
+
+    The command should print the transcription:
+
+    ```
+    [00:00:00.000 --> 00:00:11.000]   And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.
+    ```
+
+9. **Rename Folder to whisper_cpp**
+
+- To avoid "File Not Found" errors, rename `whisper.cpp` to `whisper_cpp`.
+
+
+10. **Set .env variables** 
+- In the .env file add these two lines:
+  ```plaintext
+   WHISPER_MODEL_PATH = "<Absolute path for whisper_cpp/main>"
+
+   WHISPER_MAIN_PATH= "<Absolute Path for whisper_cpp/models/ggml-tiny.en.bin>"
+   ```
+Make sure to pass the absolute path of these files as relative paths will cause issues.
+Whisper is all set!
+
+**Credits:**
+
+Special thanks to [this tutorial](https://www.youtube.com/watch?v=yclO67nSufw&t=831s) for guiding the setup process.
+
 
 ### Step 6: Obtain a Groq API Key
 
