@@ -29,7 +29,7 @@
       - [Mac OS](#Mac-OS)
       - [Windows](#Windows)
     - [Step 6: Obtain a Groq API Key](Step-6-Obtain-a-Groq-API-Key)
-    - [Step 7: Add Groq API key in .env](Step-7-Add-Groq-API-key-in-.env)
+    - [Step 7: Add Groq API key in .env](Step-7-Add-Groq-API-key-in-env)
 - [Running the application](#Running-the-application)
 - [Future work](#Future-work)
 - [NOTE](#NOTE)
