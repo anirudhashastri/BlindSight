@@ -14,7 +14,7 @@
 - [CLI Features](#CLI-Features)
   - [Task List](#Task-List)
 - [Interface Design](#Interface-Design)
-- [Screenshots / Video](#Screenshots-Video)
+- [Screenshots: Video](#Screenshots-Video)
 - [Tech Stack](#Tech-Stack)  
 - [Feedback Plan](#Feedback-Plan)
     - [Objective](#Objective)
@@ -105,7 +105,7 @@ The prototype interface has been carefully designed to meet accessibility requir
     - We have used a text to speach model so that the user get feedback of all the task that thay are doing on the system.
 
 ---
-## Screenshots / Video
+## Screenshots: Video
 Our project does not have any frontend interface (visual UI) as our whole project is build to help the visually disabled. Our interface is rooted in Text to speach and speach to text therefore we are adding a video link below to show how our system work for you reference. (Click on the image below for video)
 
 [![Watch the video](https://github.com/anirudhashastri/BlindSight/blob/f0b11d0b7f1c4581220d066dc7b0afce8633ebfc/images/thumbnail.png)](https://drive.google.com/file/d/1PtzMPufQGHWVCk3AjRUqQE70H2LEru79/view?usp=sharing)
