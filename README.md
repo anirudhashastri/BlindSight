@@ -11,7 +11,10 @@
 - [Prototype Features](#Prototype-Features)
     - [Core Functionalities](#Core-Functionalities)
     - [User Interface Highlights](#User-Interface-Highlights)
-- [Interface Design](#Interface-Design)  
+- [CLI Features](#CLI-Features)
+  - [Task List](#Task-List)
+- [Interface Design](#Interface-Design)
+- [Tech Stack](#Tech-Stack)  
 - [Feedback Plan](#Feedback-Plan)
     - [Objective](#Objective)
     - [Methods](#Methods)
@@ -26,14 +29,18 @@
 
 
 ## Overview
-This repository contains the first high-fidelity prototype of the BlindSight project. The prototype focuses on delivering an intuitive user interface to empower visually impaired and physically disabled individuals to navigate and manage their computer's file system through voice commands. This prototype serves as a foundational step toward the final product and is designed to collect valuable user feedback for iterative improvements.
+This repository contains the first high-fidelity prototype of the BlindSight project. 
 
+BlindSight is our innovative approach to making computer systems more accessible and intuitive for individuals with complete or partial visual impairment. Using just a single key, users can navigate the operating system and perform essential tasks like text-file editing and OS manipulation (e.g., changing directories, listing files, creating folders, etc.). Our mission is to foster inclusivity in the tech space and empower individuals with disabilities by providing them with tools for equal representation in the digital world.
+
+NOTE:The current version of the system is designed specifically for visually impaired users. It is built with the assumption that users can hear and have basic motor skills to interact with the interface by clicking buttons.
 ---
 
 ## Objectives
 1. Develop a functional prototype with a **user-friendly interface** that aligns with the core functionality of the project.
 2. Demonstrate how design ideas have been translated into an **interactive prototype**.
 3. Lay the groundwork for **testing and refining the interface** based on feedback from target users.
+
 
 ![FlowChart](https://github.com/anirudhashastri/BlindSight/blob/2ed29c0bac7b5ed5cf44d75bc0213bc44d152230/images/flowchart.jpg)
 
@@ -57,7 +64,7 @@ This repository contains the first high-fidelity prototype of the BlindSight pro
 
 
 ---
-## CLI features
+## CLI Features
 - Below are the set of commands that work well in the current system without any immediate issues.There are a few tasks
 that are still in devlopment and are not recomended at the current state of the project.
 ### Task List
@@ -117,22 +124,25 @@ The prototype interface has been carefully designed to meet accessibility requir
 To evaluate the usability and effectiveness of the BlindSight prototype through targeted feedback from end users and accessibility experts.
 
 ### Methods
+For each participent with consent we wil also take a screen recording of the session to refere back for analysis and further improvements.
+
 1. User Testing Sessions:
    - Participants: 4–6 users from the target demographic.
+   - If we are unable to colaborate with Envisioning Access we will simulate by bindfolding users. We will also install BlindSight into their local system for the to experiment with for extra feedback they can provide later below is the setup for when we conduct the interviews only.
    - Setup: Controlled testing environment with pre-defined tasks.
    - Data Collection:
-     - User navigation ease.
-     - Accuracy of voice recognition.
-     - Satisfaction with audio feedback and responses.
+     - User navigation ease. 
+     - Accuracy of voice recognition
+     - Satisfaction with audio feedback and responses.( This will tell us about the effectiveness of the task we have integrated and also give us information about out Text to speech and Speech to text)
 
 2. Surveys:
-   - Distributed post-testing to collect subjective opinions on:
+   - Distributed post-testing to collect subjective opinions on (For this we will personally ask them the question and note down their responses as indicated in User Incorporation Plan submitted from the previous assignment):
      - Interface intuitiveness.
      - Perceived usability.
      - Suggestions for improvement.
 
 3. Interviews:
-   - Conduct one-on-one interviews to gather in-depth insights about user experience.
+   - Conduct one-on-one interviews to gather in-depth insights about user experience.(As mentioned befoer these will be recoreded)
    - Focus Areas:
      - Challenges faced during navigation.
      - Suggestions for additional features.
@@ -140,11 +150,12 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
 ---
 ## Final Deliverables Checklist:
 These are the list of tasks that are currently in work and we will have ready for our final submission of he project
-1) Command line interaction using voice (including tasks like deleting files and folders).
-2) Document editing features using voice
-3) We will try to have a better Text to speach model with response speed control
-4) The final project will also be easier  to run as we plan to make it a executable file or a docker contrainer.
-
+1) expand command line features.
+2) Refine and add more document editing features.
+3) We will try to have a better Text to speach model with response speed control.
+4) Reduce LLM dependence and add further verfication statergies.
+5) Multi Threading for the CLI command and Text to speach (this has allread been done for the dociment reader).
+6) We will add log files to evaluate the accuracy of the speach to text , text to speach and the LLM response for CLI tasks and document editing.
 ---
 
 ## Set up instructions
@@ -255,7 +266,7 @@ Whisper is all set!
 
 ## Running the application
 - Once all the steps above are followed you will have
-  1) Wisper installed
+  1) Whisper installed
   2) The environment set up
   3) Groq api key entered
 - Now to run the pipeline 
@@ -269,6 +280,23 @@ Whisper is all set!
      ```
   2) Windows
     - run comand prompt as administrator
+
+
+## Future work
+1) Make it a executable file or a docker container for ease of use.
+2) Make use of Local LLM models like [Ollama](https://ollama.com/library/llama3.1) so multiple system can access it as a server for scalablity , privacy and security.
+3) Fine tune the LLM for our specfic use case for document reading and CLI tasks.
+4) Custom voice models for wider inclusivity (accent, tone).
+5) Add support for other languages we are only doing it for english now.
+
+
+
+## NOTE
+Though we are using API key from Groq for now, we have gone through [Groq Privacy policy](https://groq.com/privacy-policy/) and it gaurentees cetain things like:
+1) Non data retention
+2) Comprehensive compliance
+3) No training on personal data
+
 
 
 
