@@ -147,8 +147,9 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
 - Ram Recomended: 16Gb , Minimum:8Gb
 - Whisper Installation (Follow our wisper instalation guide)
   
+### (Optional) Step 1: Create an Anaconda Environment
 
-### Step 1: Create an Anaconda Environment
+**You could choose to use the terminal/command prompt base env or create a virtual env (we have shown it through anaconda)**
 
 1. Open your terminal or Anaconda Prompt install [Anaconda](https://docs.anaconda.com/anaconda/install/) for your system .
 2. Run the following command to create a new environment:
@@ -163,7 +164,18 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
     conda activate BlindSight
     ```
 
-### Step 2: Install Required Packages
+
+### step 2: Clone the GitHub Repository
+Clone the repository into a working directory of your choice
+```bash
+git clone https://github.com/anirudhashastri/BlindSight.git
+```
+and change into the directory
+```bash
+cd BlindSight
+```
+
+### Step 3: Install Required Packages
 
 
 # TODO: exact requirements needs to be updated
@@ -174,24 +186,52 @@ Install the necessary packages, :
 pip install -r requirements.txt
 ```
 
-### step-3: Set up wisper for speech to text
+### step-4: Set up whisper for speech to text
 
 #### Mac OS
+Following are the steps to install Whisper CPP for Macos (You can also follow the official [Whisper CPP](https://github.com/ggerganov/whisper.cpp) Documentation):
+- Clone the Whisper Repository within the BlindSight Project Directory:
+  ```bash
+  git clone https://github.com/ggerganov/whisper.cpp.git
+   ```
+- Navigate into the Whisper Folder:
+  ```bash
+  cd whisper.cpp
+   ```
+- Download one of the models (Base.en shown in this example):
+  ```bash
+  sh ./models/download-ggml-model.sh base.en
+   ```
+- Execute Make command:
+  ```bash
+   make -j
+   ```
+- Come out of whisper.cpp:
+  ```bash
+   cd ..
+   ```
+- In the .env file add these two lines:
+  ```plaintext
+   WHISPER_MODEL_PATH = "<Absolute Path of the whisper model>"
+
+   WHISPER_MAIN_PATH= "<Absolute Path of the whisper main file>"
+   ```
+Make sure to pass the absolute path of these files as relative paths will cause issues.
+Whisper is all set!
 
 #### Windows
 
 
-### Step 4: Obtain a Groq API Key
+### Step 5: Obtain a Groq API Key
 
 1. Visit the [Groq API website](https://www.groq.com) and sign up for a developer account.
 2. Generate a free API key from your dashboard under **API Keys**.
 3. Copy this key for use in the next step.
 4. I have also provided a key for ease of useage in the APIKEY.txt
 
-### Step 5: Configure the `.env` File
+### Step 6: Add Groq API key in credentials.env
 
-1. In the root directory of your project, create a `.env` file (if it doesn’t already exist).
-2. Add your Groq API key in the following format:
+- Add your Groq API key in the following format:
 
     ```plaintext
     GROQ_API_KEY=your_api_key_here
