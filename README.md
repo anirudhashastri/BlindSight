@@ -93,7 +93,7 @@ The prototype interface has been carefully designed to meet accessibility requir
     - Windows 
     - Mac
 - Language:
-    - Python
+    - Python 3.10
 - Speach to text:
     - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speach to text model built by OpenAI. For our use case we have decided to go with Whisper Tiny.
     - We have spken about the set and instalation of this module below.
@@ -105,8 +105,9 @@ The prototype interface has been carefully designed to meet accessibility requir
 - Multi Threading:
     - currently we have parallelized the Speach to text for the **Document Reader** so that it is not overwhelming for the user.
  
-- Text to Speech:
+- Text to Speech (TTS):
     - We have used python package [pyttsx3](https://pypi.org/project/pyttsx3/) for speech to text.
+    - We are also planning to incorprete speed control and a better TTS. We are curretnly usng this for the prototype only.
 ---
 
 ## Feedback Plan
@@ -134,6 +135,8 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
      - Challenges faced during navigation.
      - Suggestions for additional features.
 
+---
+## Final Deliverables Checklist:
 ---
 
 ## Set up instructions
