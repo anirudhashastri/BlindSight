@@ -171,10 +171,14 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
 Install the necessary packages, :
 
 ```bash
-pip install groq dotenv pyttsx3 pyaudio SpeechRecognition
+pip install -r requirements.txt
 ```
 
 ### step-3: Set up wisper for speech to text
+
+#### Mac OS
+
+#### Windows
 
 
 ### Step 4: Obtain a Groq API Key
