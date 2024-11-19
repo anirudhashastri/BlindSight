@@ -271,77 +271,56 @@ Whisper is all set!
 
 #### Steps to Set Up Whisper CPP on Windows:
 
-  1.**Clone the Whisper CPP Repository:**
-
+  1) **Clone the Whisper CPP Repository:**
     Open Command Prompt in the blindsight folder and run:
-    ```bash
-        git clone https://github.com/ggerganov/whisper.cpp.git
-    ```
-
       ```bash
         git clone https://github.com/ggerganov/whisper.cpp.git
       ```
 
-  2.**Navigate to the Repository Directory:**
-
+  2) **Navigate to the Repository Directory:**
       ```bash
         cd whisper.cpp
       ```
 
-  3.**Generate Build Files with CMake:**
-
+  3) **Generate Build Files with CMake:**
       ```bash
         cmake . --fresh
       ```
 
-  4.**Build the Project Using MSBuild:**
-
+  4) **Build the Project Using MSBuild:**
       ```bash
         msbuild ALL_BUILD.vcxproj /p:Configuration=Release
       ```
 
-  5.**Navigate to the Models Directory:**
-
+  5) **Navigate to the Models Directory:**
       ```bash
         cd models
       ```
 
-  6.**Download the Whisper Model:**
-
+  6) **Download the Whisper Model:**
       ```bash
         curl -L https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin?download=true -o models\ggml-tiny.en.bin
       ```
 
-  7.**Copy Build Files:**
+  7) **Copy Build Files:**
+        - Option 1: Using Command Prompt, copy all files from `bin\Release` to the `whisper.cpp` directory:
+             ```bash
+                xcopy /E /I bin\Release\* ..\ 
+              ```
+        - **Option 2:** Alternatively, manually copy the files using File Explorer.
 
-    - **Option 1:** Using Command Prompt, copy all files from `bin\Release` to the `whisper.cpp` directory:
-
-        ```bash
-          xcopy /E /I bin\Release\* ..\
-        ```
-
-    - **Option 2:** Alternatively, manually copy the files using File Explorer.
-
-  8.**Run the Whisper CPP Executable:**
-
-    Ensure you're in the `whisper.cpp` directory and execute:
-
+  9) **Run the Whisper CPP Executable:**
+    - Ensure you're in the `whisper.cpp` directory and execute:
     ```bash
-    main -m models\ggml-base.bin -f samples\jfk.wav -t 8
-
-
+        main -m models\ggml-base.bin -f samples\jfk.wav -t 8
     ```
-
     **Expected Output:**
-
     The command should print the transcription:
-
     ```
     [00:00:00.000 --> 00:00:11.000]   And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.
     ```
 
-  9.**Rename Folder to whisper_cpp**
-
+  10) **Rename Folder to whisper_cpp**
     - To avoid "File Not Found" errors, rename `whisper.cpp` to `whisper_cpp`.
 
 
