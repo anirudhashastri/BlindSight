@@ -67,7 +67,7 @@ NOTE:The current version of the system is designed specifically for visually imp
 - Accessibility-Driven Design:
   - Clear, speech-compatible prompts.
   - Audio feedback for every command executed.
-  - Capablity to intrupt the Speach to text to update input from uer usin a single key (Default:Space bar)
+  - Capablity to intrupt the Speach to text to update input from user using a single key (Default:Space bar)
 
 
 
@@ -106,7 +106,7 @@ The prototype interface has been carefully designed to meet accessibility requir
 
 ---
 ## Screenshots / Video
-Our project does not have any frontend interface (visual UI) as our whole project is build to help the visually disabled. Our interfeace is rooted in Text to speach and speach to text therefore we are adding a video link below to show how our system work for you reference.
+Our project does not have any frontend interface (visual UI) as our whole project is build to help the visually disabled. Our interface is rooted in Text to speach and speach to text therefore we are adding a video link below to show how our system work for you reference. (Click on the video below)
 
 [![Watch the video](https://github.com/anirudhashastri/BlindSight/blob/f0b11d0b7f1c4581220d066dc7b0afce8633ebfc/images/thumbnail.png)](https://drive.google.com/file/d/1PtzMPufQGHWVCk3AjRUqQE70H2LEru79/view?usp=sharing)
 
