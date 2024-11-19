@@ -138,7 +138,7 @@ Our project does not have any frontend interface (visual UI) as our whole projec
 To evaluate the usability and effectiveness of the BlindSight prototype through targeted feedback from end users and accessibility experts.
 
 ### Methods
-For each participent with consent we wil also take a screen recording of the session to refere back for analysis and further improvements.
+For each participant with consent we wil also take a screen recording of the session to refer back for analysis and further improvements.
 
 1. User Testing Sessions:
    - Participants: 4–6 users from the target demographic.
