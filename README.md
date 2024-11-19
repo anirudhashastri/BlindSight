@@ -121,9 +121,9 @@ Our project does not have any frontend interface (visual UI) as our whole projec
     - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speech to text model developed by OpenAI. For our use case we have decided to go with Whisper Tiny.
     - We have spoken about the set and instalation of this module below.
 - LLM:
-    - We are using Lamma3.1:70B through a API from [Groq](https://console.groq.com/docs/models).
+    - We are using Llama.1:70B through a API from [Groq](https://console.groq.com/docs/models).
     - Though we are using an LLM API key in some key places due to time shortage but we wil evetually be using a local LLM to improve scerity
-    - Curertnly we are using the Lamma API as we want to make it mobile for testing purposes. However this can bring up privacy and security issues (as dicussed below).However the in the case when this is being deployed to customers as a product we plan to use local Lamma from [Ollama](https://ollama.com/library/llama3.1) as we have already tested with it and it works.
+    - Curertnly we are using the Llama API as we want to make it mobile for testing purposes. However this can bring up privacy and security issues (as dicussed below).However the in the case when this is being deployed to customers as a product we plan to use local Llama from [Ollama](https://ollama.com/library/llama3.1) as we have already tested with it and it works.
 
 - Multi Threading:
     - currently we have parallelized the Speach to text for the **Document Reader** so that it is not overwhelming for the user.
