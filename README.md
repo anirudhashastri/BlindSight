@@ -98,7 +98,15 @@ The prototype interface has been carefully designed to meet accessibility requir
     - [Whisper CPP](https://github.com/ggerganov/whisper.cpp) is a localized Speach to text model built by OpenAI. For our use case we have decided to go with Whisper Tiny.
     - We have spken about the set and instalation of this module below.
 - LLM:
-    - We are using Lamma3.1:70B through a API from [Groq](https://console.groq.com/docs/models)
+    - We are using Lamma3.1:70B through a API from [Groq](https://console.groq.com/docs/models).
+    - Though we are using an LLM API key in some key places due to time shortage but we wil evetually be using a local LLM to improve scerity
+    - Curertnly we are using the Lamma API as we want to make it mobile for testing purposes. However this can bring up privacy and security issues (as dicussed below).However the in the case when this is being deployed to customers as a product we plan to use local Lamma from [Ollama](https://ollama.com/library/llama3.1) as we have already tested with it and it works.
+
+- Multi Threading:
+    - currently we have parallelized the Speach to text for the **Document Reader** so that it is not overwhelming for the user.
+ 
+- Text to Speech:
+    - We have used python package [pyttsx3](https://pypi.org/project/pyttsx3/) for speech to text.
 ---
 
 ## Feedback Plan
@@ -107,7 +115,7 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
 
 ### Methods
 1. User Testing Sessions:
-   - Participants: 4–6 users from the target demographic (visually impaired and physically disabled).
+   - Participants: 4–6 users from the target demographic.
    - Setup: Controlled testing environment with pre-defined tasks.
    - Data Collection:
      - User navigation ease.
