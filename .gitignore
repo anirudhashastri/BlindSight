@@ -1,2 +1,9 @@
 # Ignore the vosk model files
 Vosk_Models/
+.env
+whisper_cpp/
+input_audio.wav
+output_audio.wav
+__pycache__/
+output_audio.mp3
+test.ipynb
