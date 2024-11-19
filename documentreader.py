@@ -159,7 +159,7 @@ def write_docx(file_path, content):
         ValueError: If the file extension is unsupported.
     """
     try:
-        if file_path.lower().endswith(".docx") and isinstance(content, Document):
+        if file_path.lower().endswith(".docx") and isinstance(content, type(Document)):
             content.save(file_path)
             logging.info(f"Successfully wrote to .docx file: {file_path}")
         elif file_path.lower().endswith(".txt") and isinstance(content, str):
@@ -304,7 +304,7 @@ def doc_main(command, speech_recog):
             break
         
         elif 'read' in command.lower():
-            if isinstance(document_content, Document):
+            if isinstance(document_content, type(Document)):
                 # Extract text from the Document object
                 full_text = []
                 for para in document_content.paragraphs:
@@ -360,7 +360,7 @@ def main():
         return
     
     # Speak the initial document content
-    if isinstance(document_content, Document):
+    if isinstance(document_content, type(Document)):
         # Extract text from the Document object
         full_text = []
         for para in document_content.paragraphs:

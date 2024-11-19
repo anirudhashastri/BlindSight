@@ -33,6 +33,7 @@ class STT:
 
             # Display the list of available microphones
             logging.info("\nAvailable Microphones:")
+            print("\nAvailable Microphone\n")
             for idx, device in enumerate(input_devices):
                 logging.info(f"{idx}: {device['name']} ")
 
@@ -40,6 +41,8 @@ class STT:
             # Prompt the user to select a microphone in a loop
             while True:
                 try:
+                    for idx, device in enumerate(input_devices):
+                        print(f"{idx}: {device['name']}")
                     selection = input("\nSelect a microphone by index (or type 'exit' to quit): ")
                     if selection.lower() == 'exit':
                         logging.info("Exiting Microphone Selection.")
