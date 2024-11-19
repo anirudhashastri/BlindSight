@@ -355,7 +355,7 @@ Special thanks to [this tutorial](https://www.youtube.com/watch?v=yclO67nSufw&t=
     GROQ_API_KEY=your_api_key_here
     ```
 
-3. For security, ensure `.env` is listed in `.gitignore` (included in this project) to avoid accidentally committing sensitive information.
+- For security, ensure `.env` is listed in `.gitignore` (included in this project) to avoid accidentally committing sensitive information.
 
 ---
 
