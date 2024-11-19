@@ -100,7 +100,7 @@ The prototype interface has been carefully designed to meet accessibility requir
 ## Screenshots / Video
 Our project does not have any frontend interface (visual UI) as our whole project is build to help the visually disabled. Our interfeace is rooted in Text to speach and speach to text therefore we are adding a video link below to show how our system work for you reference.
 
-![DemoVideo](https://drive.google.com/file/d/1PtzMPufQGHWVCk3AjRUqQE70H2LEru79/view?usp=sharing)
+[DemoVideo](https://drive.google.com/file/d/1PtzMPufQGHWVCk3AjRUqQE70H2LEru79/view?usp=sharing)
 
 ---
 ## Tech Stack
