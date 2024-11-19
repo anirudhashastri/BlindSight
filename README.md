@@ -226,7 +226,7 @@ Make sure to pass the absolute path of these files as relative paths will cause 
 Whisper is all set!
 
 #### Windows
-#TODO: Desai will add this part
+# TODO: Desai will add this part
 
 ### Step 6: Obtain a Groq API Key
 
@@ -248,6 +248,13 @@ Whisper is all set!
 ---
 
 ## Running the application
-
+- Once all the steps above are followed you will have
+  1) Wisper installed
+  2) The environment set up
+  3) Groq api key entered
+- Now to run the pipeline 
+```bash
+  python pipline.py
+   ```
 
 
