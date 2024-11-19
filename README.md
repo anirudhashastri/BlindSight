@@ -259,7 +259,7 @@ Whisper is all set!
 #### Windows
 
 
-####Prerequisites:
+#### Prerequisites:
 
 - Ensure the following tools are installed and added to your system's `PATH`:
 
@@ -270,7 +270,7 @@ Whisper is all set!
   3. **MSBuild Tools for C++ Development** (includes the C++ compiler) [Download MSBuild Tools](https://learn.microsoft.com/en-us/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2019)
   4. **FFmpeg**
 
-####Steps to Set Up Whisper CPP on Windows:
+#### Steps to Set Up Whisper CPP on Windows:
 
   1. **Clone the Whisper CPP Repository:**
 
