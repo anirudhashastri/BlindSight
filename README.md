@@ -365,7 +365,7 @@ Special thanks to [this tutorial](https://www.youtube.com/watch?v=yclO67nSufw&t=
 3. Copy this key for use in the next step.
 4. I have also provided a key for ease of useage in the APIKEY.txt
 
-### Step 7: Add Groq API key in .env
+### Step 7: Add Groq API key in `.env`
 
 - Add your Groq API key in the following format:
 
