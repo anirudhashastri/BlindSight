@@ -185,8 +185,12 @@ Install the necessary packages, :
 ```bash
 pip install -r requirements.txt
 ```
+### step-4: create a .env file
+- In the main working directory (BlindSight) create a .env file and add the keys we mention in the following steps
+- **While adding the API key, do not use quotes**
 
-### step-4: Set up whisper for speech to text
+
+### step-5: Set up whisper for speech to text
 
 #### Mac OS
 Following are the steps to install Whisper CPP for Macos (You can also follow the official [Whisper CPP](https://github.com/ggerganov/whisper.cpp) Documentation):
@@ -220,16 +224,16 @@ Make sure to pass the absolute path of these files as relative paths will cause 
 Whisper is all set!
 
 #### Windows
+#TODO: Desai will add this part
 
-
-### Step 5: Obtain a Groq API Key
+### Step 6: Obtain a Groq API Key
 
 1. Visit the [Groq API website](https://www.groq.com) and sign up for a developer account.
 2. Generate a free API key from your dashboard under **API Keys**.
 3. Copy this key for use in the next step.
 4. I have also provided a key for ease of useage in the APIKEY.txt
 
-### Step 6: Add Groq API key in credentials.env
+### Step 7: Add Groq API key in .env
 
 - Add your Groq API key in the following format:
 
