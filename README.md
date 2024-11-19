@@ -323,9 +323,8 @@ Whisper is all set!
   10) **Rename Folder to whisper_cpp**
     - To avoid "File Not Found" errors, rename `whisper.cpp` to `whisper_cpp`.
 
-
-10.**Set .env variables** 
-  - In the .env file add these two lines:
+ 11) **Set .env variables**
+    - In the .env file add these two lines:
     ```plaintext
     WHISPER_MODEL_PATH = "<Absolute path for whisper_cpp/main>"
 
@@ -333,6 +332,8 @@ Whisper is all set!
     ```
   Make sure to pass the absolute path of these files as relative paths will cause issues.
   Whisper is all set!
+ 
+  
 
 **Credits:**
 
