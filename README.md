@@ -14,7 +14,7 @@
 - [CLI Features](#CLI-Features)
   - [Task List](#Task-List)
 - [Interface Design](#Interface-Design)
-- [Screenshots / Video](#Screenshots-/-Video)
+- [Screenshots / Video](#Screenshots-Video)
 - [Tech Stack](#Tech-Stack)  
 - [Feedback Plan](#Feedback-Plan)
     - [Objective](#Objective)
