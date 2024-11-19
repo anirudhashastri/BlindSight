@@ -21,7 +21,7 @@
     - [Methods](#Methods)
 - [Final Deliverables Checklist](#Final-Deliverables-Checklist)
 - [Set up instructions](#Set-up-instructions)
-    - [(Optional) Step 1: Create an Anaconda Environment](#(Optional)-Step-1-Create-an-Anaconda-Environment)
+    - [Step 1: Create an Anaconda Environment Optional ](#Step-1-Create-an-Anaconda-Environment-Optional)
     - [step 2: Clone the GitHub Repository](#step-2-Clone-the-GitHub-Repository)
     - [Step 3: Install Required Packages](#Step-3-Install-Required-Packages)
     - [step 4: create a .env file](#step-4-create-a-.env-file)
@@ -180,7 +180,7 @@ These are the list of tasks that are currently in work and we will have ready fo
 - Ram Recomended: 16Gb , Minimum:8Gb
 - Whisper Installation (Follow our wisper instalation guide)
   
-### (Optional) Step 1: Create an Anaconda Environment
+### Step 1: Create an Anaconda Environment Optional
 
 **You could choose to use the terminal/command prompt base env or create a virtual env (we have shown it through anaconda)**
 
