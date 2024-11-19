@@ -35,7 +35,7 @@ This repository contains the first high-fidelity prototype of the BlindSight pro
 2. Demonstrate how design ideas have been translated into an **interactive prototype**.
 3. Lay the groundwork for **testing and refining the interface** based on feedback from target users.
 
-![FlowChart]([https://github.com/anirudhashastri/React-Bootcamp/blob/e40eda873b8696ae21c73bc3fafb685f2bea479f/Screenshots/test.png](https://github.com/anirudhashastri/BlindSight/blob/2ed29c0bac7b5ed5cf44d75bc0213bc44d152230/images/flowchart.jpg))
+![FlowChart](https://github.com/anirudhashastri/BlindSight/blob/2ed29c0bac7b5ed5cf44d75bc0213bc44d152230/images/flowchart.jpg)
 
 ---
 
