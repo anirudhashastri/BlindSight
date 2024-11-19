@@ -24,7 +24,7 @@
     - [Step 1: Create an Anaconda Environment Optional ](#Step-1-Create-an-Anaconda-Environment-Optional)
     - [step 2: Clone the GitHub Repository](#step-2-Clone-the-GitHub-Repository)
     - [Step 3: Install Required Packages](#Step-3-Install-Required-Packages)
-    - [step 4: create a .env file](#step-4-create-a-.env-file)
+    - [step 4: create a .env file](#step-4-create-a-env-file)
     - [step 5: Set up whisper for speech to text](#step-5-Set-up-whisper-for-speech-to-text)
       - [Mac OS](#Mac-OS)
       - [Windows](#Windows)
@@ -218,7 +218,7 @@ Install the necessary packages, :
 ```bash
 pip install -r requirements.txt
 ```
-### step 4: create a .env file
+### step 4: create a `.env` file
 - In the main working directory (BlindSight) create a .env file and add the keys we mention in the following steps
 - **While adding the API key, do not use quotes**
 
