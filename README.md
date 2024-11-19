@@ -384,7 +384,7 @@ Special thanks to [this tutorial](https://www.youtube.com/watch?v=yclO67nSufw&t=
   3) Groq api key entered
 - Now to run the pipeline 
 ```bash
-  python pipeline.py
+   python pipeline.py
    ```
 - If this doesnt work try
   1) Mac OS
@@ -393,6 +393,10 @@ Special thanks to [this tutorial](https://www.youtube.com/watch?v=yclO67nSufw&t=
      ```
   2) Windows
     - run comand prompt as administrator
+- Once we run pipeline.py the user will be prompted to select a microphone input (This is only for the protoype the final version will ask via voice for mic selection)
+- The file manipulation commands can be given directly 
+- **Documnet Reader commands: While doing document editing the user needs to hold down the space bar while speaking and realease when he is done and then the task will be executed.**
+
 
 
 ## Future work
