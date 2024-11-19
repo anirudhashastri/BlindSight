@@ -21,7 +21,7 @@
     - [Methods](#Methods)
 - [Final Deliverables Checklist](#Final-Deliverables-Checklist)
 - [Set up instructions](#Set-up-instructions)
-    - [(Optional) Step 1: Create an Anaconda Environment](#(Optional)-Step-1:-Create-an-Anaconda-Environment)
+    - [(Optional) Step 1: Create an Anaconda Environment](#(Optional)-Step-1-Create-an-Anaconda-Environment)
     - [step 2: Clone the GitHub Repository](#step-2-Clone-the-GitHub-Repository)
     - [Step 3: Install Required Packages](#Step-3-Install-Required-Packages)
     - [step 4: create a .env file](#step-4-create-a-.env-file)
