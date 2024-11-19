@@ -309,7 +309,7 @@ Whisper is all set!
               ```
         - **Option 2:** Alternatively, manually copy the files using File Explorer.
 
-  9) **Run the Whisper CPP Executable:**
+  8) **Run the Whisper CPP Executable:**
     - Ensure you're in the `whisper.cpp` directory and execute:
     ```bash
         main -m models\ggml-base.bin -f samples\jfk.wav -t 8
@@ -320,10 +320,10 @@ Whisper is all set!
     [00:00:00.000 --> 00:00:11.000]   And so my fellow Americans, ask not what your country can do for you, ask what you can do for your country.
     ```
 
-  10) **Rename Folder to whisper_cpp**
+  9) **Rename Folder to whisper_cpp**
     - To avoid "File Not Found" errors, rename `whisper.cpp` to `whisper_cpp`.
 
-  11) **Set .env variables**
+  10) **Set .env variables**
         - In the .env file add these two lines:
         ```plaintext
         WHISPER_MODEL_PATH = "<Absolute path for whisper_cpp/main>"
