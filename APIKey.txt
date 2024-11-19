@@ -1,0 +1,6 @@
+GROQ_API_KEY=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
+ 
+WHISPER_MODEL_PATH = "/Users/mani/Desktop/BlindSight/whisper.cpp/models/ggml-tiny.en.bin"
+ 
+WHISPER_MAIN_PATH="/Users/mani/Desktop/BlindSight/whisper.cpp/main"
+ 
