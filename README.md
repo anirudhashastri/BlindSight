@@ -14,17 +14,25 @@
 - [CLI Features](#CLI-Features)
   - [Task List](#Task-List)
 - [Interface Design](#Interface-Design)
+- [Screenshots / Video](#Screenshots-/-Video)
 - [Tech Stack](#Tech-Stack)  
 - [Feedback Plan](#Feedback-Plan)
     - [Objective](#Objective)
     - [Methods](#Methods)
+- [Final Deliverables Checklist](#Final-Deliverables-Checklist)
 - [Set up instructions](#Set-up-instructions)
-    - [Step 1: Create an Anaconda Environment](#Step-1-Create-an-Anaconda-Environment)
-    - [Step 2: Install Required Packages](#Step-2-Install-Required-Packages)
-    - [step 3: Set up wisper for speech to text](#step-3-Set-up-wisper-for-speech-to-text)
-    - [Step 4: Obtain a Groq API Key](#Step-4-Obtain-a-Groq-API-Key)
-    - [Step 5: Configure the `.env` File](#Step-5-Configure-the-`.env`-File)
+    - [Step 1: Create an Anaconda Environment Optional ](#Step-1-Create-an-Anaconda-Environment-Optional)
+    - [step 2: Clone the GitHub Repository](#step-2-Clone-the-GitHub-Repository)
+    - [Step 3: Install Required Packages](#Step-3-Install-Required-Packages)
+    - [step 4: create a .env file](#step-4-create-a-.env-file)
+    - [step 5: Set up whisper for speech to text](#step-5-Set-up-whisper-for-speech-to-text)
+      - [Mac OS](#Mac-OS)
+      - [Windows](#Windows)
+    - [Step 6: Obtain a Groq API Key](Step-6-Obtain-a-Groq-API-Key)
+    - [Step 7: Add Groq API key in .env](Step-7-Add-Groq-API-key-in-.env)
 - [Running the application](#Running-the-application)
+- [Future work](#Future-work)
+- [NOTE](#NOTE)
 
 
 
@@ -97,10 +105,16 @@ The prototype interface has been carefully designed to meet accessibility requir
     - We have used a text to speach model so that the user get feedback of all the task that thay are doing on the system.
 
 ---
+## Screenshots / Video
+Our project does not have any frontend interface (visual UI) as our whole project is build to help the visually disabled. Our interfeace is rooted in Text to speach and speach to text therefore we are adding a video link below to show how our system work for you reference.
+
+[![Watch the video](https://github.com/anirudhashastri/BlindSight/blob/f0b11d0b7f1c4581220d066dc7b0afce8633ebfc/images/thumbnail.png)](https://drive.google.com/file/d/1PtzMPufQGHWVCk3AjRUqQE70H2LEru79/view?usp=sharing)
+
+---
 ## Tech Stack
 - OS Compatiblity:
-    - Windows 
-    - Mac
+    - Windows 10/11
+    - Mac OS  12/13/14/15
 - Language:
     - Python 3.10
 - Speach to text:
@@ -148,7 +162,7 @@ For each participent with consent we wil also take a screen recording of the ses
      - Suggestions for additional features.
 
 ---
-## Final Deliverables Checklist:
+## Final Deliverables Checklist
 These are the list of tasks that are currently in work and we will have ready for our final submission of he project
 1) expand command line features.
 2) Refine and add more document editing features.
@@ -166,7 +180,7 @@ These are the list of tasks that are currently in work and we will have ready fo
 - Ram Recomended: 16Gb , Minimum:8Gb
 - Whisper Installation (Follow our wisper instalation guide)
   
-### (Optional) Step 1: Create an Anaconda Environment
+### Step 1: Create an Anaconda Environment Optional
 
 **You could choose to use the terminal/command prompt base env or create a virtual env (we have shown it through anaconda)**
 
@@ -204,12 +218,12 @@ Install the necessary packages, :
 ```bash
 pip install -r requirements.txt
 ```
-### step-4: create a .env file
+### step 4: create a .env file
 - In the main working directory (BlindSight) create a .env file and add the keys we mention in the following steps
 - **While adding the API key, do not use quotes**
 
 
-### step-5: Set up whisper for speech to text
+### step 5: Set up whisper for speech to text
 
 #### Mac OS
 Following are the steps to install Whisper CPP for Macos (You can also follow the official [Whisper CPP](https://github.com/ggerganov/whisper.cpp) Documentation):
