@@ -204,9 +204,9 @@ Following are the steps to install Whisper CPP for Macos (You can also follow th
   ```bash
   cd whisper.cpp
    ```
-- Download one of the models (Base.en shown in this example):
+- Download one of the models (tiny.en shown in this example):
   ```bash
-  sh ./models/download-ggml-model.sh base.en
+  sh ./models/download-ggml-model.sh tiny.en
    ```
 - Execute Make command:
   ```bash
@@ -218,9 +218,9 @@ Following are the steps to install Whisper CPP for Macos (You can also follow th
    ```
 - In the .env file add these two lines:
   ```plaintext
-   WHISPER_MODEL_PATH = "<Absolute Path of the whisper model>"
+   WHISPER_MODEL_PATH = "<Absolute path for whisper.cpp/main>"
 
-   WHISPER_MAIN_PATH= "<Absolute Path of the whisper main file>"
+   WHISPER_MAIN_PATH= "<Absolute Path for whisper.cpp/models/ggml-tiny.en.bin>"
    ```
 Make sure to pass the absolute path of these files as relative paths will cause issues.
 Whisper is all set!
