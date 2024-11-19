@@ -139,6 +139,12 @@ To evaluate the usability and effectiveness of the BlindSight prototype through 
 
 ---
 ## Final Deliverables Checklist:
+These are the list of tasks that are currently in work and we will have ready for our final submission of he project
+1) Command line interaction using voice (including tasks like deleting files and folders).
+2) Document editing features using voice
+3) We will try to have a better Text to speach model with response speed control
+4) The final project will also be easier  to run as we plan to make it a executable file or a docker contrainer.
+
 ---
 
 ## Set up instructions
@@ -262,7 +268,7 @@ Whisper is all set!
       sudo python pipeline.py
      ```
   2) Windows
-    - run comand promt as administrator
+    - run comand prompt as administrator
 
 
 
