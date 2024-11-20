@@ -211,7 +211,7 @@ cd BlindSight
 ### Step 3: Install Required Packages
 
 
-# TODO: exact requirements needs to be updated
+
 
 Install the necessary packages, :
 
