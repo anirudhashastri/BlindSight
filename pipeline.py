@@ -7,43 +7,69 @@ from groq import Groq
 from STT import STT
 from TTS import speak
 from documentreader import doc_main
+import logging
+import sys
+import os
+from datetime import datetime
+
+# Create logs directory if it doesn't exist
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+
+# Generate timestamp for log filename
+timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler(f"logs/blindsight_{timestamp}.log")
+    ]
+)
+
+# Create logger for the specific module
+logger = logging.getLogger(__name__)
+
+# Test logging
+logger.info(f"Logging initialized for {__name__}")
 
 # Ensure that your .env file contains the following variables:
 # GROQ_API_KEY, WHISPER_MAIN_PATH, WHISPER_MODEL_PATH
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,  # Set to DEBUG for more detailed logs
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),       # Log to console
-        logging.FileHandler("pipeline.log")      # Log to a file
-    ]
-)
 
 # Initialize Speech-to-Text (STT) system
 try:
     speech_recog = STT()
-    logging.info("Speech-to-Text system initialized.")
+    logger.info("Speech-to-Text system initialized.")
 except ImportError as e:
-    logging.error(f"Failed to import STT class: {e}")
+    logger.error(f"Failed to import STT class: {e}")
     speak("Speech recognition system is not available.")
     sys.exit(1)
 except Exception as e:
-    logging.error(f"Error initializing STT system: {e}")
+    logger.error(f"Error initializing STT system: {e}")
     speak("An error occurred while initializing the speech recognition system.")
     sys.exit(1)
 
 
 
-client = Groq(
-   api_key=os.environ["GROQ_API_KEY"],
-)
+# Initialize Groq client
+try:
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("GROQ_API_KEY not found in environment variables")
+    client = Groq(api_key=api_key)
+    logger.info("Groq client initialized successfully.")
+except Exception as e:
+    logger.error(f"Failed to initialize Groq client: {e}")
+    speak("Failed to initialize the language model. Please check your API key and try again.")
+    sys.exit(1)
 
 # Determine the operating system name
 os_name = os.name
-logging.info(f"Operating system detected: {os_name}")
+logger.info(f"Operating system detected: {os_name}")
 
 
 if os_name == 'nt':
@@ -51,7 +77,7 @@ if os_name == 'nt':
 else:
     os_name = 'Unix/Linux'
 
-logging.info(f"OS Name set to: {os_name}")
+logger.info(f"OS Name set to: {os_name}")
 
 
 
@@ -143,10 +169,10 @@ Respond only with the intent label and nothing else.
         )
         # Extract and return the intent label
         intent_label = response.choices[0].message.content.strip()
-        logging.info(f"Intent recognized: {intent_label}")
+        logger.info(f"Intent recognized: {intent_label}")
         return intent_label
     except Exception as e:
-        logging.error(f"Error during intent recognition: {e}")
+        logger.error(f"Error during intent recognition: {e}")
         speak("I encountered an error while trying to understand your command.")
         return None
   
@@ -197,10 +223,10 @@ Guidelines:
         )
         # Extract and return the bash command
         bash_command = response.choices[0].message.content.strip()
-        logging.info(f"Bash command generated: {bash_command}")
+        logger.info(f"Bash command generated: {bash_command}")
         return bash_command
     except Exception as e:
-        logging.error(f"Error during bash command generation: {e}")
+        logger.error(f"Error during bash command generation: {e}")
         speak("I encountered an error while generating the bash command.")
         return None
 
@@ -222,28 +248,28 @@ def execute_command(command):
             path = command[3:].strip()
             os.chdir(path)
             current_dir = os.getcwd()
-            logging.info(f"Changed directory to {current_dir}")
+            logger.info(f"Changed directory to {current_dir}")
             return f"Changed directory to {current_dir}"
         
         elif command.startswith("find "):
             result = subprocess.run(command, shell=True,capture_output=True, text=True)
             output = result.stdout.strip()
-            logging.info(f"Find command output: {output}")
+            logger.info(f"Find command output: {output}")
             return result.stdout.strip()
 
         else:
             # Execute other bash commands
             result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
             output = result.stdout.strip()
-            logging.info(f"Bash command output: {output}")
+            logger.info(f"Bash command output: {output}")
             return output
 
     except subprocess.CalledProcessError as e:
         error_output = e.stderr.strip() if e.stderr else str(e)
-        logging.error(f"Command '{command}' failed with error: {error_output}")
+        logger.error(f"Command '{command}' failed with error: {error_output}")
         return e
     except Exception as e:
-        logging.error(f"Unexpected error during command execution: {e}")
+        logger.error(f"Unexpected error during command execution: {e}")
         return e
     
 
@@ -283,10 +309,10 @@ If the error message is: "Exception occurred: [Errno 2] No such file or director
             model="llama3-70b-8192"
         )
         missing_item = response.choices[0].message.content.strip()
-        logging.info(f"Missing item identified: {missing_item}")
+        logger.info(f"Missing item identified: {missing_item}")
         return missing_item
     except Exception as e:
-        logging.error(f"Error during missing file identification: {e}")
+        logger.error(f"Error during missing file identification: {e}")
         speak("I encountered an error while identifying the missing file.")
         return None
 
@@ -310,7 +336,7 @@ def generate_find_command(missing_item):
         find_command = f'dir /s /b *{missing_item}*'
     else:
         find_command = f"find / -name '{missing_item}' -maxdepth 5 2>/dev/null"
-    logging.info(f"Find command generated: {find_command}")
+    logger.info(f"Find command generated: {find_command}")
     return find_command
 
 
@@ -341,10 +367,10 @@ def explainError(error_message):
             model="llama3-70b-8192"
         )
         explained_error = response.choices[0].message.content.strip()
-        logging.info(f"Error explanation: {explained_error}")
+        logger.info(f"Error explanation: {explained_error}")
         return explained_error
     except Exception as e:
-        logging.error(f"Error during error explanation: {e}")
+        logger.error(f"Error during error explanation: {e}")
         speak("I encountered an error while trying to explain the issue.")
         return "An error occurred while processing your request."
 
@@ -360,13 +386,13 @@ def pipeline(request):
         str: The result of the executed command or an error message.
     """    
     cwd = os.getcwd()
-    logging.info(f"Current working directory: {cwd}")
+    logger.info(f"Current working directory: {cwd}")
     
     try:
         # Generate and execute the primary bash command
         bash_command = generate_bash_command(request, cwd,os_name)
         if not bash_command:
-            logging.error("Bash command generation failed.")
+            logger.error("Bash command generation failed.")
             speak("I couldn't generate a bash command for your request.")
             return "Command generation failed."        
         
@@ -385,7 +411,7 @@ def pipeline(request):
         # Fallback: Identify the missing item and generate a 'find' command
         explained_error = explainError(str(e))
         # print(explained_error)
-        logging.error(f"Error during pipeline execution: {explained_error}")
+        logger.error(f"Error during pipeline execution: {explained_error}")
     
 
         # Check if the exception is related to a missing file or directory
@@ -393,7 +419,7 @@ def pipeline(request):
             # Identify the missing item from the error message
             missing_item = generate_missing_file(str(e))
             if missing_item:
-                logging.info(f"Searching for missing item: {missing_item}")
+                logger.info(f"Searching for missing item: {missing_item}")
                 speak(f"Searching for the missing item: {missing_item}")
                 
                 # Generate and execute the 'find' command to locate the missing item
@@ -443,27 +469,27 @@ IF THE COMMAND DOES NOT MAKE SENSE, RESPOND WITH "SORRY, GIVE DOCUMENT COMMANDS 
             model="llama3-70b-8192"
         )
         formatted_response = response.choices[0].message.content.strip()
-        logging.info(f"Formatted response for TTS: {formatted_response}")
+        logger.info(f"Formatted response for TTS: {formatted_response}")
         return formatted_response
     except Exception as e:
-        logging.error(f"Error during response formatting: {e}")
+        logger.error(f"Error during response formatting: {e}")
         speak("I encountered an error while formatting the response.")
         return "I encountered an error while processing your request."
 
 speak("I can now start assisting you!")
-logging.info("System is ready to assist the user.")
+logger.info("System is ready to assist the user.")
 
 while(True):
 
     speech_recog.record_audio("audio_sample.wav", duration=7)
     command  = speech_recog.process_audio_with_whisper("audio_sample.wav")
-    logging.info(f"User command received: {command}")
+    logger.info(f"User command received: {command}")
     print(f"Command: {command}")
 
     # Check for termination commands
     if command is None or "end" in command.lower():
         speak("Ending the session. Goodbye!")
-        logging.info("Session terminated by the user.")
+        logger.info("Session terminated by the user.")
         break
 
     # Recognize the intent of the command
@@ -472,10 +498,10 @@ while(True):
         # Handle document-related operations
         doc_main(command, speech_recog=speech_recog)
         speak("You are now back to your operating system.")
-        logging.info("Returned to operating system after document operation.")
+        logger.info("Returned to operating system after document operation.")
     else:
         # Handle bash command executions
         response = ReadSolution(command, pipeline(command))
         print(f"Response: {response}")
         speak(response)
-        logging.info("Bash command execution completed.")
+        logger.info("Bash command execution completed.")

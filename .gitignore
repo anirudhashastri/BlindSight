@@ -7,3 +7,4 @@ output_audio.wav
 __pycache__/
 output_audio.mp3
 test.ipynb
+logs/

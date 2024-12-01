@@ -312,7 +312,7 @@ Whisper is all set!
   8) **Run the Whisper CPP Executable:**
     - Ensure you're in the `whisper.cpp` directory and execute:
     ```bash
-        main -m models\ggml-base.bin -f samples\jfk.wav -t 8
+        main -m models\ggml-tiny.en.bin -f samples\jfk.wav -t 8
     ```
     **Expected Output:**
     The command should print the transcription:

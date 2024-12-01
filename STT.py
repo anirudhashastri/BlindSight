@@ -7,6 +7,32 @@ import re
 import sys
 from dotenv import load_dotenv
 import logging
+import sys
+import os
+from datetime import datetime
+
+# Create logs directory if it doesn't exist
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+
+# Generate timestamp for log filename
+timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler(f"logs/blindsight_{timestamp}.log")
+    ]
+)
+
+# Create logger for the specific module
+logger = logging.getLogger(__name__)
+
+# Test logging
+logger.info(f"Logging initialized for {__name__}")
 
 load_dotenv()
 
@@ -28,14 +54,14 @@ class STT:
             # Filter out devices that have input channels (microphones)
             input_devices = [device for device in devices if device['max_input_channels'] > 0]
             if not input_devices:
-                logging.info("No input devices (microphones) found.")
+                logger.info("No input devices (microphones) found.")
                 return None
 
             # Display the list of available microphones
-            logging.info("\nAvailable Microphones:")
+            logger.info("\nAvailable Microphones:")
             print("\nAvailable Microphone\n")
             for idx, device in enumerate(input_devices):
-                logging.info(f"{idx}: {device['name']} ")
+                logger.info(f"{idx}: {device['name']} ")
 
 
             # Prompt the user to select a microphone in a loop
@@ -45,21 +71,21 @@ class STT:
                         print(f"{idx}: {device['name']}")
                     selection = input("\nSelect a microphone by index (or type 'exit' to quit): ")
                     if selection.lower() == 'exit':
-                        logging.info("Exiting Microphone Selection.")
+                        logger.info("Exiting Microphone Selection.")
                         return None
                     selection = int(selection)
 
                     if 0 <= selection < len(input_devices):
                         selected_device = input_devices[selection]
-                        logging.info(f"\nSelected Microphone: {selected_device['name']}")
+                        logger.info(f"\nSelected Microphone: {selected_device['name']}")
                         return selected_device
                     else:
-                        logging.info(f"Please enter a number between 0 and {len(input_devices) - 1}.")
+                        logger.info(f"Please enter a number between 0 and {len(input_devices) - 1}.")
                 except ValueError:
-                    logging.info("Invalid input. Please enter a valid number.")
+                    logger.info("Invalid input. Please enter a valid number.")
 
         except Exception as e:
-            logging.info(f"An error occurred while listing microphones: {e}")
+            logger.info(f"An error occurred while listing microphones: {e}")
             return None
 
     def record_audio(self, filename, duration=5):
@@ -71,7 +97,7 @@ class STT:
             duration (int): The duration of the recording in seconds.
         """
         if not self.microphone:
-            logging.info("No microphone selected. Exiting.")
+            logger.info("No microphone selected. Exiting.")
             return
 
         # Set the selected microphone as the input device
@@ -81,17 +107,17 @@ class STT:
             # Define 16 kHz as the sample rate
             sample_rate = 16000
             print(f"Recording for {duration} seconds...")
-            logging.info("Recording...")
+            logger.info("Recording...")
             audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1)
             sd.wait()  # Wait until the recording is finished
-            logging.info("Recording complete.")
+            logger.info("Recording complete.")
 
             # Save as a .wav file at 16-bit PCM format
             audio_data = np.int16(audio_data * 32767)
             write(filename, sample_rate, audio_data)
-            logging.info(f"Audio saved as {filename}")
+            logger.info(f"Audio saved as {filename}")
         except Exception as e:
-            logging.info(f"An error occurred during recording: {e}")
+            logger.info(f"An error occurred during recording: {e}")
 
     def process_audio_with_whisper(self, file_path):
         """
@@ -106,22 +132,22 @@ class STT:
         model_path = os.environ['WHISPER_MODEL_PATH']
 
         if not main_path or not model_path:
-            logging.info("Error: Whisper main path or model path is not set.")
+            logger.info("Error: Whisper main path or model path is not set.")
             return
         
         # Check if the Whisper binary exists
         if not os.path.isfile(main_path):
-            logging.info(f"Error: The Whisper binary '{main_path}' does not exist.")
+            logger.info(f"Error: The Whisper binary '{main_path}' does not exist.")
             return
         
         # Check if the model file exists
         if not os.path.isfile(model_path):
-            logging.info(f"Error: The model file '{model_path}' does not exist.")
+            logger.info(f"Error: The model file '{model_path}' does not exist.")
             return            
 
         # Check if the WAV file exists
         if not os.path.isfile(file_path):
-            logging.info(f"Error: The file '{file_path}' does not exist.")
+            logger.info(f"Error: The file '{file_path}' does not exist.")
             return
 
         # Construct the command
@@ -133,7 +159,7 @@ class STT:
 
         try:
             # Execute the command
-            logging.info(f"Running command: {' '.join(command)}")
+            logger.info(f"Running command: {' '.join(command)}")
             result = subprocess.run(command, check=True, text=True, capture_output=True)
 
             # Extract output and clean it
@@ -143,7 +169,7 @@ class STT:
             plain_text = " ".join(sentences).strip()
 
             if not plain_text:
-                logging.info("No text extracted from the audio.")
+                logger.info("No text extracted from the audio.")
                 return
             
 
@@ -151,23 +177,23 @@ class STT:
             cleaned_text = re.sub(r"([.?!])", r"\1\n", plain_text).strip()
 
             # logging.info the cleaned text
-            logging.info("Processed Text:")
-            logging.info(cleaned_text)
+            logger.info("Processed Text:")
+            logger.info(cleaned_text)
             return cleaned_text
         
 
         except subprocess.CalledProcessError as e:
-            logging.info(f"An error occurred while processing the file: {e}")
-            logging.info(f"Error Output: {e.stderr}")
+            logger.info(f"An error occurred while processing the file: {e}")
+            logger.info(f"Error Output: {e.stderr}")
         except Exception as e:
-            logging.info(f"An unexpected error occurred: {e}")
+            logger.info(f"An unexpected error occurred: {e}")
         finally:
             # Delete the file after processing
             try:
                 os.remove(file_path)
-                logging.info(f"File '{file_path}' has been deleted.")
+                logger.info(f"File '{file_path}' has been deleted.")
             except Exception as e:
-                logging.info(f"An error occurred while deleting the file: {e}")
+                logger.info(f"An error occurred while deleting the file: {e}")
 
 
 if __name__ == "__main__":
