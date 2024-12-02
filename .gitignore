@@ -2,6 +2,7 @@
 Vosk_Models/
 .env
 whisper_cpp/
+tts_testing.ipynb
 input_audio.wav
 output_audio.wav
 __pycache__/
