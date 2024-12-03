@@ -6,36 +6,20 @@ import os
 import re
 import sys
 from dotenv import load_dotenv
-import logging
+from log_config import setup_logger
 import sys
 import os
 from datetime import datetime
 
-# Create logs directory if it doesn't exist
-if not os.path.exists('logs'):
-    os.makedirs('logs')
-
-# Generate timestamp for log filename
-timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        # logging.StreamHandler(sys.stdout),
-        logging.FileHandler(f"logs/blindsight_{timestamp}.log"),
-        logging.FileHandler(f"logs/blindsight_STT_latest.log")
-    ]
-)
 
 # Create logger for the specific module
-logger = logging.getLogger(__name__)
+logger = setup_logger('STT')
 
 # Test logging
 logger.info(f"Logging initialized for {__name__}")
 
 load_dotenv()
+
 
 class STT:
     def __init__(self):

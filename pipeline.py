@@ -1,38 +1,20 @@
 import os
 import subprocess
 import sys
-import logging
 from dotenv import load_dotenv
 from groq import Groq
 from STT import STT
 from TTS import speak
 from documentreader import doc_main
-import logging
+from log_config import setup_logger
 import sys
 import os
 from datetime import datetime
 
-# Create logs directory if it doesn't exist
-if not os.path.exists('logs'):
-    os.makedirs('logs')
 
-# Generate timestamp for log filename
-timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        # logging.StreamHandler(sys.stdout),
-        logging.FileHandler(f"logs/blindsight_{timestamp}.log"),
-        logging.FileHandler(f"logs/blindsight_pipeline_latest.log"),
-
-    ]
-)
 
 # Create logger for the specific module
-logger = logging.getLogger(__name__)
+logger = setup_logger('pipeline')
 
 # Test logging
 logger.info(f"Logging initialized for {__name__}")
@@ -44,10 +26,11 @@ load_dotenv()
 
 # Initialize Speech-to-Text (STT) system
 try:
-    speech_recog = STT()
-    logger.info("Speech-to-Text system initialized.")
+    from enhanced_stt import EnhancedSTT  
+    speech_recog = EnhancedSTT()
+    logger.info("Enhanced Speech-to-Text system initialized.")
 except ImportError as e:
-    logger.error(f"Failed to import STT class: {e}")
+    logger.error(f"Failed to import EnhancedSTT class: {e}")
     speak("Speech recognition system is not available.")
     sys.exit(1)
 except Exception as e:
@@ -478,20 +461,29 @@ IF THE COMMAND DOES NOT MAKE SENSE, RESPOND WITH "SORRY, GIVE DOCUMENT COMMANDS 
         speak("I encountered an error while formatting the response.")
         return "I encountered an error while processing your request."
 
-speak("I can now start assisting you!")
+speak("I can now start assisting you! Please press and hold the spacebar to speak your command.", speed=1.5)
 logger.info("System is ready to assist the user.")
 
 while(True):
 
-    speech_recog.record_audio("audio_sample.wav", duration=7)
-    command  = speech_recog.process_audio_with_whisper("audio_sample.wav")
+    # Record audio using press-and-hold
+    if not speech_recog.record_press_hold("audio_sample.wav"):
+        speak("Recording failed. Please try again.")
+        continue
+        
+    command = speech_recog.process_audio_with_whisper("audio_sample.wav")
     logger.info(f"User command received: {command}")
     print(f"Command: {command}")
 
     # Check for termination commands
-    if command is None or "end" in command.lower():
-        speak("Ending the session. Goodbye!")
-        logger.info("Session terminated by the user.")
+    if command is None:
+        speak("No command recieved!")
+        logger.info("No command recieved")
+        continue
+
+    if command.lower() == "exit" or command.lower() == "quit":
+        speak("Exiting the program. Goodbye!")
+        logger.info("Exiting the program.")
         break
 
     # Recognize the intent of the command

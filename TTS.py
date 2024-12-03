@@ -1,201 +1,204 @@
 from yapper import Yapper, PiperSpeaker, PiperVoice, PiperQuality
-import logging
-import sys
-import os
-from datetime import datetime
-from pynput import keyboard
 import threading
+from pynput import keyboard
 import re
+import json
+import os
+from log_config import setup_logger
+import shutil
 
-# Create logs directory if it doesn't exist
-if not os.path.exists('logs'):
-    os.makedirs('logs')
+# Initialize logger
+logger = setup_logger('TTS')
 
-# Generate timestamp for log filename
-timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+class CustomPiperSpeaker(PiperSpeaker):
+    def __init__(self, voice: PiperVoice = PiperVoice.AMY, 
+                 quality: PiperQuality = PiperQuality.MEDIUM,
+                 length_scale: float = 1.0):
+        """
+        Custom Piper Speaker with speed control via length_scale.
+        """
+        super().__init__(voice=voice, quality=quality)
+        self.length_scale = length_scale
+        self.voice = voice
+        self.quality = quality
+        self._modify_config()
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        # logging.StreamHandler(sys.stdout),
-        logging.FileHandler(f"logs/blindsight_{timestamp}.log"),
-        logging.FileHandler(f"logs/blindsight_TTS_latest.log"),
+    def _modify_config(self):
+        """Modify Piper config file to adjust speech rate."""
+        try:
+            # Read the current config with explicit UTF-8 encoding
+            with open(self.conf_f, 'r', encoding='utf-8') as f:
+                config = json.load(f)
 
-    ]
-)
+            # Create backup if it doesn't exist
+            backup_path = str(self.conf_f) + '.backup'
+            if not os.path.exists(backup_path):
+                with open(self.conf_f, 'r', encoding='utf-8') as src, \
+                     open(backup_path, 'w', encoding='utf-8') as dst:
+                    dst.write(src.read())
+                logger.info(f"Created config backup at {backup_path}")
 
-# Create logger for the specific module
-logger = logging.getLogger(__name__)
-logger.info(f"Logging initialized for {__name__}")
+            # Modify length_scale
+            config['length_scale'] = self.length_scale
+            
+            # Write modified config with explicit UTF-8 encoding
+            with open(self.conf_f, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            
+            logger.info(f"Updated Piper config with length_scale: {self.length_scale}")
+            
+        except Exception as e:
+            logger.error(f"Error modifying Piper config: {e}")
+            # Attempt to restore from backup if it exists
+            backup_path = str(self.conf_f) + '.backup'
+            if os.path.exists(backup_path):
+                with open(backup_path, 'r', encoding='utf-8') as src, \
+                     open(self.conf_f, 'w', encoding='utf-8') as dst:
+                    dst.write(src.read())
+                logger.info("Restored config from backup")
+            raise  # Re-raise the exception to be handled by caller
 
-# Speech rate settings
-DEFAULT_SPEED = 1.0
-MIN_SPEED = 0.5
-MAX_SPEED = 2.0
-current_speed = DEFAULT_SPEED
+class TTSController:
+    def __init__(self):
+        # Initialize speed settings
+        self.default_speed = 1.0
+        self.min_speed = 0.5
+        self.max_speed = 2.0
+        self.current_speed = self.default_speed
+        self.voice = PiperVoice.AMY
+        self.quality = PiperQuality.MEDIUM
 
-# File extension pronunciation dictionary
-EXTENSION_PRONUNCIATION = {
-    '.txt': 'dot text',
-    '.py': 'dot pie',
-    '.ipynb': 'dot eye pie notebook',
-    '.md': 'dot markdown',
-    '.json': 'dot jason',
-    '.yaml': 'dot yaml',
-    '.yml': 'dot yaml',
-    '.csv': 'dot see ess vee',
-    '.docx': 'dot doc x',
-    '.xlsx': 'dot excel x',
-    '.pdf': 'dot pee dee eff',
-    '.wav': 'dot wave',
-    '.mp3': 'dot em pee three',
-    '.mp4': 'dot em pee four',
-    '.jpg': 'dot jay peg',
-    '.jpeg': 'dot jay peg',
-    '.png': 'dot ping',
-    '.gif': 'dot gif',
-    '.html': 'dot html',
-    '.css': 'dot see ess ess',
-    '.js': 'dot javascript',
-    '.cpp': 'dot see plus plus',
-    '.h': 'dot header',
-    '.exe': 'dot executable',
-    '.log': 'dot log',
-    '.zip': 'dot zip',
-    '.tar': 'dot tar',
-    '.gz': 'dot gee zip',
-    '.env': 'dot env',
-}
+        self.speaking = False
+        self.recording = False
 
-# Initialize Yapper with PiperSpeaker for better quality
-try:
-    speaker = PiperSpeaker(
-        voice=PiperVoice.AMY,
-        quality=PiperQuality.MEDIUM
-    )
-    yapper = Yapper(speaker=speaker, plain=True)
-    logger.info("Yapper TTS initialized successfully with PiperSpeaker")
-except Exception as e:
-    logger.error(f"Failed to initialize Yapper with PiperSpeaker: {e}")
-    yapper = Yapper(plain=True)
-    logger.info("Falling back to default Yapper speaker")
+        # Initialize CustomPiperSpeaker
+        try:
+            self._initialize_speaker()
+        except Exception as e:
+            logger.error(f"Failed to initialize Custom Piper: {e}")
+            # Initialize without custom configuration
+            self.speaker = PiperSpeaker(
+                voice=self.voice,
+                quality=self.quality
+            )
+            self.yapper = Yapper(speaker=self.speaker, plain=True)
+            logger.info("Initialized with default speaker configuration")
 
-# Global flag for speech interruption
-speaking = False
+        # Initialize keyboard listener
+        self.keyboard_listener = None
+        self._setup_keyboard_listener()
 
-def on_press(key):
-    global speaking
-    logger.info("Interrupt signal received. Stopping speech.")
-    speaking = False
-    return False
+    def _setup_keyboard_listener(self):
+        """Initialize keyboard listener for spacebar events."""
+        def on_press(key):
+            if key == keyboard.Key.space:
+                if self.speaking:
+                    self.speaking = False
+                    logger.info("Speech interrupted by spacebar")
+                self.recording = True
 
-def preprocess_text(text):
-    """
-    Preprocesses text to improve pronunciation of filenames and extensions.
-    
-    Args:
-        text (str): Text to preprocess
-    
-    Returns:
-        str: Processed text with improved pronunciation
-    """
-    # Function to replace extensions in a filename
-    def replace_extension(match):
-        filename = match.group(0)
-        for ext, pronunciation in EXTENSION_PRONUNCIATION.items():
-            if filename.lower().endswith(ext):
-                base = filename[:-len(ext)]
-                return f"{base} {pronunciation}"
-        return filename
+        def on_release(key):
+            if key == keyboard.Key.space:
+                self.recording = False
 
-    # Find filenames (words containing dots) and replace their extensions
-    processed = re.sub(r'\b\w+\.[A-Za-z0-9]+\b', replace_extension, text)
-    return processed
+        try:
+            # Stop existing listener if any
+            if self.keyboard_listener is not None:
+                self.keyboard_listener.stop()
+
+            # Create and start new listener
+            self.keyboard_listener = keyboard.Listener(
+                on_press=on_press,
+                on_release=on_release)
+            self.keyboard_listener.start()
+            logger.info("Keyboard listener initialized")
+        except Exception as e:
+            logger.error(f"Failed to setup keyboard listener: {e}")
+
+    def _initialize_speaker(self):
+        """Initialize or reinitialize the custom speaker."""
+        self.speaker = CustomPiperSpeaker(
+            voice=self.voice,
+            quality=self.quality,
+            length_scale=1.0 / self.current_speed  # Inverse relationship
+        )
+        self.yapper = Yapper(speaker=self.speaker, plain=True)
+        logger.info("Custom Piper TTS initialized successfully")
+
+    def set_speed(self, speed=None):
+        """Set the speech rate and update Piper configuration."""
+        if speed is None:
+            speed = self.default_speed
+            
+        self.current_speed = max(self.min_speed, min(self.max_speed, speed))
+        
+        try:
+            self._initialize_speaker()
+            logger.info(f"Speech rate set to {self.current_speed}x")
+        except Exception as e:
+            logger.error(f"Failed to update speech rate: {e}")
+        
+        return self.current_speed
+
+    def speak(self, text, speed=None):
+        """
+        Speaks text with support for interruption and speed control.
+        
+        Args:
+            text (str): Text to be spoken
+            speed (float, optional): Speed multiplier (0.5 to 2.0)
+        """
+        if speed is not None and speed != self.current_speed:
+            self.set_speed(speed)
+            
+        self.speaking = True
+        chunks = text.split('.')
+        
+        for chunk in chunks:
+            if not self.speaking:
+                logger.info("Speech interrupted")
+                break
+                
+            chunk = chunk.strip()
+            if chunk:
+                try:
+                    self.yapper.yap(chunk + '.', block=True)
+                    logger.debug(f"Spoken chunk at speed {self.current_speed}x")
+                except Exception as e:
+                    logger.error(f"Error during speech synthesis: {e}")
+                    break
+                
+            if not self.speaking:
+                logger.debug("Speech interrupted after chunk")
+                break
+
+        self.speaking = False
+        logger.info("Speech completed or interrupted")
+
+    def is_recording(self):
+        """Check if system is currently in recording mode"""
+        return self.recording
+
+    def get_current_speed(self):
+        """Get current speech rate"""
+        return self.current_speed
+
+# Create global TTS controller instance
+tts_controller = TTSController()
+
+# Global interface functions
+def speak(text, speed=None):
+    """Speak text at specified speed"""
+    tts_controller.speak(text, speed)
 
 def set_speed(speed):
-    """
-    Sets the speech rate within allowed bounds.
-    
-    Args:
-        speed (float): Desired speech rate multiplier (0.5 to 2.0)
-    
-    Returns:
-        float: Actual speed set
-    """
-    global current_speed
-    current_speed = max(MIN_SPEED, min(MAX_SPEED, speed))
-    logger.info(f"Speech rate set to {current_speed}x")
-    return current_speed
+    """Set speech rate"""
+    return tts_controller.set_speed(speed)
 
-def speak(text, speed=None):
-    """
-    Speaks the provided text using Yapper TTS with support for interruption.
-    
-    Args:
-        text (str): The text to be spoken
-        speed (float, optional): Speech rate multiplier (0.5 to 2.0)
-    """
-    global speaking, current_speed
-    
-    # Set speed if provided
-    if speed is not None:
-        set_speed(speed)
-    
-    speaking = True
-    processed_text = preprocess_text(text)
-    
-    # Create a thread for the keyboard listener
-    def keyboard_listener():
-        with keyboard.Listener(on_press=on_press) as listener:
-            listener.join()
-    
-    listener_thread = threading.Thread(target=keyboard_listener)
-    listener_thread.daemon = True
-    listener_thread.start()
-    logger.debug("Keyboard listener thread started.")
-    
-    # Split text into sentences or chunks for more responsive interruption
-    chunks = processed_text.split('.')
-    
-    for chunk in chunks:
-        if not speaking:
-            logger.debug("Speech interrupted before speaking the next chunk.")
-            break
-        
-        chunk = chunk.strip()
-        if chunk:
-            try:
-                # Note: The current version of Yapper doesn't support speed control directly
-                # This is a placeholder for when it's implemented
-                yapper.yap(chunk + '.', block=True)
-                logger.debug(f"Spoken chunk: {chunk}")
-            except Exception as e:
-                logger.error(f"Error during speech synthesis: {e}")
-                break
-        
-        if not speaking:
-            logger.debug("Speech interrupted after speaking the chunk.")
-            break
-    
-    speaking = False
-    logger.info("Speech synthesis completed or interrupted.")
+def get_speed():
+    """Get current speech rate"""
+    return tts_controller.get_current_speed()
 
-def change_voice(voice: PiperVoice = PiperVoice.AMY, quality: PiperQuality = PiperQuality.MEDIUM):
-    """
-    Changes the voice used by the TTS system.
-    
-    Args:
-        voice (PiperVoice): The voice to use from PiperVoice enum
-        quality (PiperQuality): The quality level from PiperQuality enum
-    """
-    global yapper
-    try:
-        speaker = PiperSpeaker(voice=voice, quality=quality)
-        yapper = Yapper(speaker=speaker, plain=True)
-        logger.info(f"Voice changed to {voice.value} with {quality.value} quality")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to change voice: {e}")
-        return False
+def is_recording():
+    """Check recording status"""
+    return tts_controller.is_recording()

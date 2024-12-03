@@ -2,133 +2,21 @@ from docx import Document
 from groq import Groq
 import os
 from dotenv import load_dotenv
-import pyttsx3
 from pynput import keyboard
 import threading
 import sys
-import logging
+from log_config import setup_logger
+from TTS import speak, set_speed  
 import sys
 import os
 from datetime import datetime
 
-# Create logs directory if it doesn't exist
-if not os.path.exists('logs'):
-    os.makedirs('logs')
-
-# Generate timestamp for log filename
-timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        # logging.StreamHandler(sys.stdout),
-        logging.FileHandler(f"logs/blindsight_{timestamp}.log"),
-        logging.FileHandler(f"logs/blindsight_documentreader_latest.log"),
-
-    ]
-)
-
 # Create logger for the specific module
-logger = logging.getLogger(__name__)
-
-# Test logging
+logger = setup_logger("documentreader")
 logger.info(f"Logging initialized for {__name__}")
 
 # Load environment variables
 load_dotenv()
-
-# # Configure logging
-# logging.basicConfig(
-#     level=logging.INFO,  # Set to DEBUG for more detailed logs
-#     format='%(asctime)s - %(levelname)s - %(message)s',
-#     handlers=[
-#         logging.StreamHandler(sys.stdout),  # Log to stdout
-#         logging.FileHandler("documentreader.log")  # Log to a file
-#     ]
-# )
-
-# Initialize text-to-speech engine
-try:
-    engine = pyttsx3.init()
-    logger.info("pyttsx3 engine initialized successfully.")
-except Exception as e:
-    logger.error(f"Failed to initialize pyttsx3 engine: {e}")
-    sys.exit(1)
-
-# Global flag for speech interruption
-speaking = False
-
-def on_press(key):
-    """
-    Callback function for keyboard listener.
-    Sets the global 'speaking' flag to False to interrupt speech.
-    
-    Args:
-        key: The key that was pressed.
-    
-    Returns:
-        False to stop the listener.
-    """
-    global speaking
-    logger.info("Interrupt signal received. Stopping speech.")
-    speaking = False
-    return False  # Stop listener
-
-def speak(text):
-    """
-    Speaks the provided text using the pyttsx3 engine.
-    Allows interruption of speech via a keyboard press.
-    
-    Args:
-        text (str): The text to be spoken.
-    """    
-    global speaking
-    speaking = True
-    
-    # Create a thread for the keyboard listener
-    def keyboard_listener():
-        """
-        Starts a keyboard listner that waits for any key press to interrupt speech.
-        """
-        with keyboard.Listener(on_press=on_press) as listener:
-            listener.join()
-    
-    # Create and start the keyboard listener thread
-    listener_thread = threading.Thread(target=keyboard_listener)
-    listener_thread.daemon = True
-    listener_thread.start()
-    logging.debug("Keyboard listener thread started.")
-
-    
-    # Split text into sentences or chunks for more responsive interruption
-    chunks = text.split('.')
-    
-    for chunk in chunks:
-        if not speaking: # Speech interrupted
-            engine.stop()
-            logging.debug("Speech interrupted before speaking the next chunk.")
-            break
-        
-        chunk = chunk.strip()
-        if chunk:  # Only speak non-empty chunks
-            try:
-                engine.say(chunk + '.')  # Add period back for correct pronunciation
-                engine.runAndWait()
-                logging.debug(f"Spoken chunk: {chunk}")
-            except Exception as e:
-                logger.error(f"Error during speech synthesis: {e}")
-                break
-            
-        if not speaking:
-            engine.stop()
-            logging.debug("Speech interrupted after speaking the chunk.")
-            break
-
-    speaking = False
-    logger.info("Speech synthesis completed or interrupted.")
-
 
 # Initialize Groq client with API key from environment variables
 groq_api_key = os.getenv("GROQ_API_KEY")
@@ -165,7 +53,7 @@ def read_docx(filename):
                 logger.info(f"Successfully read .txt file: {filename}")
                 return content
         else:
-            logging.warning(f"Unsupported file format for file: {filename}")
+            logger.warning(f"Unsupported file format for file: {filename}")
             return None
     except FileNotFoundError:
         logger.error(f"File not found: {filename}")
@@ -298,7 +186,8 @@ def doc_main(command, speech_recog):
         command (str): The initial command to open a document.
         speech_recog (STT): An instance of the STT (Speech-to-Text) class.
     """
-    speak("You are now in document editor mode. Say Exit at the end to close the document after all your changes.")
+    # Set slightly faster speed for system messages
+    speak("You are now in document editor mode. Say Exit at the end to close the document after all your changes.", speed=1.2)
     logger.info("Entered document editor mode.")
     
     filename = doc_reading(command)
@@ -315,7 +204,7 @@ def doc_main(command, speech_recog):
         if document_content is None:
             speak("There is no content to read. What would you like to do?")
         else:
-            speak("Document is now open. What would you like to do?")
+            speak("Document is now open. What would you like to do?", speed=1.2)
         
         # Record audio input from the user
         speech_recog.record_audio("audio_sample.wav", duration=7)
@@ -327,20 +216,20 @@ def doc_main(command, speech_recog):
             continue
         
         if "exit" in command.lower() or "close document" in command.lower():
-            speak("Closing the document editor. Goodbye!")
+            speak("Closing the document editor. Goodbye!", speed=1.2)
             logger.info("Exiting document editor mode.")
             break
         
         elif 'read' in command.lower():
             if isinstance(document_content, type(Document)):
-                # Extract text from the Document object
                 full_text = []
                 for para in document_content.paragraphs:
                     full_text.append(para.text)
                 text_to_read = '\n'.join(full_text)
             else:
                 text_to_read = document_content
-            speak(text_to_read)
+            # Use normal speed for document content
+            speak(text_to_read, speed=1.0)
             logger.info("Read command executed.")
         
         else:
@@ -349,22 +238,21 @@ def doc_main(command, speech_recog):
                 speak("Operation failed.")
                 logger.error("Document operation failed.")
             elif any(keyword in command.lower() for keyword in ["summary", "summarize", "how many", "what is"]):
-                # It's an informational query
-                speak(updated_content)
+                # Use slightly faster speed for summaries
+                speak(updated_content, speed=1.3)
                 logger.info("Informational operation executed.")
             else:
                 # It's an update operation; write back to the file
                 if filename.lower().endswith(".docx"):
-                    # Convert string to Document object
                     doc = Document()
                     for line in updated_content.split('\n'):
                         doc.add_paragraph(line)
                     write_docx(filename, doc)
-                    speak(f"File '{filename}' has been updated.")
+                    speak(f"File '{filename}' has been updated.", speed=1.2)
                     logger.info(f"File '{filename}' has been updated.")
                 elif filename.lower().endswith(".txt"):
                     write_docx(filename, updated_content)
-                    speak(f"File '{filename}' has been updated.")
+                    speak(f"File '{filename}' has been updated.", speed=1.2)
                     logger.info(f"File '{filename}' has been updated.")
                 else:
                     logger.error("Unsupported file extension.")
@@ -374,22 +262,18 @@ def main():
     """
     Entry point of the script. Reads a document and initiates the TTS.
     """
-    # Example usage
-    file_path = "test/text.txt"  # Update to the actual path
-    initial_command = "Change sun to moon"  # This could be dynamically obtained from user input
+    file_path = "test/text.txt"
+    initial_command = "Change sun to moon"
     
     logger.info("Starting document reader script.")
     
-    # Read the initial document content
     document_content = read_docx(file_path)
     if document_content is None:
         speak("Failed to read the document. Please check the file path and format.")
         logger.error("Initial document reading failed.")
         return
     
-    # Speak the initial document content
     if isinstance(document_content, type(Document)):
-        # Extract text from the Document object
         full_text = []
         for para in document_content.paragraphs:
             full_text.append(para.text)
@@ -400,9 +284,8 @@ def main():
     speak(text_to_speak)
     logger.info("Initial document content spoken.")
     
-    # Initialize Speech-to-Text (STT) system
     try:
-        from STT import STT  # Assuming you have an STT class in stt.py
+        from STT import STT
         speech_recog = STT()
         logger.info("Speech-to-Text system initialized.")
     except ImportError as e:
@@ -414,15 +297,11 @@ def main():
         speak("An error occurred while initializing the speech recognition system.")
         return
     
-    # Start the main document editor loop
     doc_main(initial_command, speech_recog)
     logger.info("Document reader script finished.")
 
-
 if __name__ == "__main__":
-    file_path = "test/text.txt"  # Update to the actual path
+    file_path = "test/text.txt"
     command = "Change sun to moon"
-
-    # Read document
     document_content = read_docx(file_path)
     speak(document_content)
