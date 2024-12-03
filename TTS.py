@@ -182,6 +182,13 @@ class TTSController:
     def get_current_speed(self):
         """Get current speech rate"""
         return self.current_speed
+    
+    def cleanup(self):
+        if self.keyboard_listener:
+            self.keyboard_listener.stop()
+        if hasattr(self, 'speaker'):
+            # Cleanup any speaker resources
+            self.speaker = None
 
 # Create global TTS controller instance
 tts_controller = TTSController()

@@ -36,9 +36,16 @@ class EnhancedSTT:
         
         # Initialize microphone
         self.microphone = self.list_and_select_microphone()
+        self.recording_lock = threading.Lock()
+        self.audio_queue = queue.Queue()
         
         # Load environment variables
         load_dotenv()
+
+    def _record_callback(self, indata, frames, time, status):
+        with self.recording_lock:
+            if self.is_recording:
+                self.audio_queue.put(indata.copy())
         
     def _setup_logging(self):
         """Setup logging for the STT system."""
@@ -55,13 +62,6 @@ class EnhancedSTT:
             sd.wait()
         except Exception as e:
             self.logger.error(f"Error playing feedback sound: {e}")
-
-    def _record_callback(self, indata, frames, time, status):
-        """Callback function for audio recording."""
-        if status:
-            self.logger.warning(f"Audio callback status: {status}")
-        if self.is_recording:
-            self.audio_queue.put(indata.copy())
 
     def _start_recording(self):
         """Start the audio recording process."""
@@ -149,6 +149,8 @@ class EnhancedSTT:
             # Get Whisper paths from environment
             main_path = os.environ['WHISPER_MAIN_PATH']
             model_path = os.environ['WHISPER_MODEL_PATH']
+
+            self.logger.info(f"Whisper paths: {main_path}, {model_path}")
 
             if not all([main_path, model_path]):
                 self.logger.error("Whisper paths not properly configured")

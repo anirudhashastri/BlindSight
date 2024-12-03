@@ -24,7 +24,7 @@ def setup_logger(module_name):
     
     # Create logger
     logger = logging.getLogger(module_name)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     
     # Remove any existing handlers
     logger.handlers = []

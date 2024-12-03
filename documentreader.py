@@ -100,6 +100,13 @@ def doc_operations(document, command):
     Returns:
         str: The updated content of the document.
     """
+
+    doc_content = document
+    if hasattr(document, 'paragraphs'):
+        doc_content = '\n'.join(para.text for para in document.paragraphs)
+    elif not isinstance(document, str):
+        doc_content = str(document)
+    
     prompt = [
         {
             "role": "system",
@@ -112,7 +119,7 @@ def doc_operations(document, command):
         },
         {
             "role": "user",
-            "content": f"{document}\n\nOperation:\n{command}"}
+            "content": f"{doc_content}\n\nOperation:\n{command}"}
     ]
 
     try:
@@ -301,7 +308,7 @@ def main():
     logger.info("Document reader script finished.")
 
 if __name__ == "__main__":
-    file_path = "test/text.txt"
+    file_path = "test/sunrise.txt"
     command = "Change sun to moon"
     document_content = read_docx(file_path)
     speak(document_content)

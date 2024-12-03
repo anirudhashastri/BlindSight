@@ -10,6 +10,7 @@ from log_config import setup_logger
 import sys
 import os
 from datetime import datetime
+import time
 
 
 
@@ -64,10 +65,23 @@ else:
 
 logger.info(f"OS Name set to: {os_name}")
 
-
+def time_llm_call(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        try:
+            result = func(*args, **kwargs)
+            elapsed = time.perf_counter() - start_time
+            logger.info(f"LLM call to {func.__name__} completed in {elapsed:.2f} seconds")
+            return result
+        except Exception as e:
+            elapsed = time.perf_counter() - start_time
+            logger.error(f"LLM call to {func.__name__} failed after {elapsed:.2f} seconds: {e}")
+            raise
+    return wrapper
 
 # Intent recognition using LLM
-def recognize_intent_with_llm(command):
+@time_llm_call
+def recognize_intent_with_llm(command,max_retries=3):
     """
     Identifies the intent of a given command using the Groq LLM.
     
@@ -77,6 +91,7 @@ def recognize_intent_with_llm(command):
     Returns:
         str: The identified intent label ("Bash command execution" or "Document Operation").
     """    
+
     prompt = [
     {
         "role": "system",
@@ -146,20 +161,24 @@ Respond only with the intent label and nothing else.
         "content": command  # Replace 'command' with the actual user input dynamically
     }
 ]
-        
-    try:
-        response = client.chat.completions.create(
-            messages=prompt,
-            model="llama3-70b-8192"
-        )
-        # Extract and return the intent label
-        intent_label = response.choices[0].message.content.strip()
-        logger.info(f"Intent recognized: {intent_label}")
-        return intent_label
-    except Exception as e:
-        logger.error(f"Error during intent recognition: {e}")
-        speak("I encountered an error while trying to understand your command.")
-        return None
+    
+
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.completions.create(
+                messages=prompt,
+                model="llama3-70b-8192"
+            )
+            intent_label = response.choices[0].message.content.strip()
+            logger.info(f"Intent recognized: {intent_label}")
+            return intent_label
+            
+        except Exception as e:
+            if attempt == max_retries - 1:
+                logger.error(f"Failed to recognize intent after {max_retries} attempts: {e}")
+                return None
+            logger.warning(f"Attempt {attempt + 1} failed, retrying...")
+            time.sleep(1)  # Wait before retry
   
     # response = client.chat.completions.create(
     #     messages=prompt,
@@ -170,6 +189,7 @@ Respond only with the intent label and nothing else.
     # bash_command = response.choices[0].message.content
     # return bash_command
 
+@time_llm_call
 def generate_bash_command(request,cwd,os_name):
     """
     Generates a bash command based on the user request using the Groq LLM.
@@ -182,6 +202,25 @@ def generate_bash_command(request,cwd,os_name):
     Returns:
         str: The generated bash command.
     """
+
+    system_commands = {
+        'Windows': {
+            'list': 'dir',
+            'delete': 'del',
+            'copy': 'copy',
+            'move': 'move',
+            'mkdir': 'mkdir',
+            'rename': 'rename'
+        },
+        'Unix/Linux': {
+            'list': 'ls',
+            'delete': 'rm',
+            'copy': 'cp',
+            'move': 'mv',
+            'mkdir': 'mkdir',
+            'rename': 'mv'
+        }
+    }
     messages = [
         {
     "role": "system",
@@ -189,6 +228,10 @@ def generate_bash_command(request,cwd,os_name):
     You are a Bash Command Generator for {os_name}.
     You should generate commands for {os_name}. 
     Provide only the required bash command in response to each user request.
+    Use these mappings:
+    Windows: dir (list), del (delete), copy, move, mkdir, rename
+    Unix/Linux/MacOS: ls (list), rm (delete), cp (copy), mv (move/rename), mkdir
+
 
 Guidelines:
 
@@ -206,16 +249,21 @@ Guidelines:
             messages=messages,
             model="llama3-70b-8192"
         )
-        # Extract and return the bash command
-        bash_command = response.choices[0].message.content.strip()
-        logger.info(f"Bash command generated: {bash_command}")
-        return bash_command
+        command = response.choices[0].message.content.strip()
+        commands = system_commands['Windows' if os_name == 'Windows' else 'Unix/Linux']
+        
+        # Replace command if needed based on OS
+        for cmd_type, os_cmd in commands.items():
+            if cmd_type in command.lower():
+                command = command.replace(cmd_type, os_cmd)
+        
+        return command
     except Exception as e:
-        logger.error(f"Error during bash command generation: {e}")
-        speak("I encountered an error while generating the bash command.")
+        logger.error(f"Command generation error: {e}")
+        speak("Error generating command. Please try again.")
         return None
 
-
+@time_llm_call
 def execute_command(command):
     """
     Executes a given bash command and returns its output.
@@ -259,6 +307,7 @@ def execute_command(command):
     
 
     # error handler functions
+@time_llm_call
 def generate_missing_file(error_message):
     """
     Identifies the missing file or directory from an error message using the Groq LLM.
@@ -301,7 +350,7 @@ If the error message is: "Exception occurred: [Errno 2] No such file or director
         speak("I encountered an error while identifying the missing file.")
         return None
 
-
+@time_llm_call
 def generate_find_command(missing_item):
     """
     Generates a 'find' command to locate the missing file or directory.
@@ -324,7 +373,7 @@ def generate_find_command(missing_item):
     logger.info(f"Find command generated: {find_command}")
     return find_command
 
-
+@time_llm_call
 def explainError(error_message):
     """
     Provides a concise explanation of a Python exception using the Groq LLM.
@@ -419,6 +468,9 @@ def pipeline(request):
             else:
                 return "An unknown error occurred during command execution."
 
+def format_filename(filename):
+    """Format filename for better TTS pronunciation."""
+    return filename.replace('.', ' dot ')
 
 def ReadSolution(question,result):
     """
@@ -431,6 +483,9 @@ def ReadSolution(question,result):
     Returns:
         str: A formatted explanation suitable for TTS.
     """    
+    if isinstance(result, Exception) or "error" in str(result).lower():
+        return "I encountered an error while executing your command. Please try rephrasing it."
+    
     messages = [
 
         {
@@ -454,6 +509,10 @@ IF THE COMMAND DOES NOT MAKE SENSE, RESPOND WITH "SORRY, GIVE DOCUMENT COMMANDS 
             model="llama3-70b-8192"
         )
         formatted_response = response.choices[0].message.content.strip()
+
+        # formatted_response = ' '.join([format_filename(word) if '.' in word else word 
+        #                              for word in formatted_response.split()])
+        
         logger.info(f"Formatted response for TTS: {formatted_response}")
         return formatted_response
     except Exception as e:
@@ -481,7 +540,7 @@ while(True):
         logger.info("No command recieved")
         continue
 
-    if command.lower() == "exit" or command.lower() == "quit":
+    if "exit" in command.lower()  or "quit" in command.lower() or "terminate" in command.lower():
         speak("Exiting the program. Goodbye!")
         logger.info("Exiting the program.")
         break
@@ -489,13 +548,20 @@ while(True):
     # Recognize the intent of the command
     intent = recognize_intent_with_llm(command)
     if intent == "Document Operation":
-        # Handle document-related operations
+
+        # Create a wrapper function to match the expected interface
+        def record_audio_wrapper(filename, duration=7):
+            return speech_recog.record_press_hold(filename)
+            
+        # Assign the wrapper function
+        speech_recog.record_audio = record_audio_wrapper
+        
+        # Call doc_main with the modified speech_recog object
         doc_main(command, speech_recog=speech_recog)
-        speak("You are now back to your operating system.")
-        logger.info("Returned to operating system after document operation.")
+        speak("Back to operating system mode.")
     else:
         # Handle bash command executions
         response = ReadSolution(command, pipeline(command))
         print(f"Response: {response}")
-        speak(response)
+        speak(response,speed=1)
         logger.info("Bash command execution completed.")
