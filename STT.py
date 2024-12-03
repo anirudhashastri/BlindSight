@@ -23,8 +23,9 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler(f"logs/blindsight_{timestamp}.log")
+        # logging.StreamHandler(sys.stdout),
+        logging.FileHandler(f"logs/blindsight_{timestamp}.log"),
+        logging.FileHandler(f"logs/blindsight_STT_latest.log")
     ]
 )
 
