@@ -10,6 +10,39 @@ import shutil
 # Initialize logger
 logger = setup_logger('TTS')
 
+
+EXTENSION_PRONUNCIATION = {
+    '.txt': 'dot text',
+    '.py': 'dot pie',
+    '.ipynb': 'dot eye pie notebook',
+    '.md': 'dot markdown',
+    '.json': 'dot jason',
+    '.yaml': 'dot yaml',
+    '.yml': 'dot yaml',
+    '.csv': 'dot see ess vee',
+    '.docx': 'dot doc x',
+    '.xlsx': 'dot excel x',
+    '.pdf': 'dot pee dee eff',
+    '.wav': 'dot wave',
+    '.mp3': 'dot em pee three',
+    '.mp4': 'dot em pee four',
+    '.jpg': 'dot jay peg',
+    '.jpeg': 'dot jay peg',
+    '.png': 'dot ping',
+    '.gif': 'dot gif',
+    '.html': 'dot html',
+    '.css': 'dot see ess ess',
+    '.js': 'dot javascript',
+    '.cpp': 'dot see plus plus',
+    '.h': 'dot header',
+    '.exe': 'dot executable',
+    '.log': 'dot log',
+    '.zip': 'dot zip',
+    '.tar': 'dot tar',
+    '.gz': 'dot gee zip',
+    '.env': 'dot env',
+}
+
 class CustomPiperSpeaker(PiperSpeaker):
     def __init__(self, voice: PiperVoice = PiperVoice.AMY, 
                  quality: PiperQuality = PiperQuality.MEDIUM,
@@ -140,6 +173,29 @@ class TTSController:
         
         return self.current_speed
 
+    def preprocess_text(self, text):
+        """
+        Preprocesses text to improve pronunciation of filenames and extensions.
+        
+        Args:
+            text (str): Text to preprocess
+        
+        Returns:
+            str: Processed text with improved pronunciation
+        """
+        # Function to replace extensions in a filename
+        def replace_extension(match):
+            filename = match.group(0)
+            for ext, pronunciation in EXTENSION_PRONUNCIATION.items():
+                if filename.lower().endswith(ext):
+                    base = filename[:-len(ext)]
+                    return f"{base} {pronunciation}"
+            return filename
+
+        # Find filenames (words containing dots) and replace their extensions
+        processed = re.sub(r'\b\w+\.[A-Za-z0-9]+\b', replace_extension, text)
+        return processed
+
     def speak(self, text, speed=None):
         """
         Speaks text with support for interruption and speed control.
@@ -152,6 +208,8 @@ class TTSController:
             self.set_speed(speed)
             
         self.speaking = True
+        # print(text)
+        text = self.preprocess_text(text)  # Now correctly called as instance method
         chunks = text.split('.')
         
         for chunk in chunks:

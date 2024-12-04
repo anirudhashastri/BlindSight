@@ -468,9 +468,6 @@ def pipeline(request):
             else:
                 return "An unknown error occurred during command execution."
 
-def format_filename(filename):
-    """Format filename for better TTS pronunciation."""
-    return filename.replace('.', ' dot ')
 
 def ReadSolution(question,result):
     """
@@ -510,8 +507,6 @@ IF THE COMMAND DOES NOT MAKE SENSE, RESPOND WITH "SORRY, GIVE DOCUMENT COMMANDS 
         )
         formatted_response = response.choices[0].message.content.strip()
 
-        # formatted_response = ' '.join([format_filename(word) if '.' in word else word 
-        #                              for word in formatted_response.split()])
         
         logger.info(f"Formatted response for TTS: {formatted_response}")
         return formatted_response
