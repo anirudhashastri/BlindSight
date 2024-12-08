@@ -6,6 +6,7 @@
 ---
 
 ## Table of Contents
+- [What's new](#What's-New?)
 - [Overview](#overview)
 - [Objectives](#Objectives)
 - [Prototype Features](#Prototype-Features)
@@ -34,10 +35,20 @@
 - [Future work](#Future-work)
 - [NOTE](#NOTE)
 
+## Whats New? 
 
+**NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'demo' branch.**
+
+Updates:
+1) A Better Text-to-speech system using yapper-tts (https://github.com/n1teshy/yapper-tts) - custom human-friendly voice and playback speeds
+2) Space bar voice interrupt for the entire system
+3) Logging is added to capture and analyse errors and command history.
+
+** We feel that using custom voices and more human-like tone and playback speed will improve the Accessibility of our tool and make it more user-friendly and interactive. Similarly giving a space-bar interrupt with sound queues helps the blind person easily interrupt the TTS and STT when they feel overwhelmed.**
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Overview
-This repository contains the first high-fidelity prototype of the BlindSight project. 
+This repository contains the Final project submission of the BlindSight project. 
 
 BlindSight is our innovative approach to making computer systems more accessible and intuitive for individuals with complete or partial visual impairment. Using just a single key, users can navigate the operating system and perform essential tasks like text-file editing and OS manipulation (e.g., changing directories, listing files, creating folders, etc.). Our mission is to foster inclusivity in the tech space and empower individuals with disabilities by providing them with tools for equal representation in the digital world.
 
@@ -163,13 +174,13 @@ For each participant with consent we wil also take a screen recording of the ses
 
 ---
 ## Final Deliverables Checklist
-These are the list of tasks that are currently in work and we will have ready for our final submission of he project
+These are the list of tasks that are currently in work and we will have ready for our final submission of the project
 1) expand command line features.
-2) Refine and add more document editing features.
-3) We will try to have a better Text to speach model with response speed control.
+2) Refine and add more document editing features. (Done using space-bar command activation in demo branch)✅
+3) We will try to have a better Text to speech model with response speed control.(Done using yapper-tts in demo branch)✅
 4) Reduce LLM dependence and add further verfication statergies.
-5) Multi Threading for the CLI command and Text to speach (this has allread been done for the dociment reader).
-6) We will add log files to evaluate the accuracy of the speach to text , text to speach and the LLM response for CLI tasks and document editing.
+5) Multi Threading for the CLI command and Text to speach (this has allread been done for the dociment reader). (done in the demo branch)✅
+6) We will add log files to evaluate the accuracy of the speach to text , text to speach and the LLM response for CLI tasks and document editing.(done in demo branch)✅
 ---
 
 ## Set up instructions
@@ -178,7 +189,7 @@ These are the list of tasks that are currently in work and we will have ready fo
 - python 3.10
 - Good microphone and speakers
 - Ram Recomended: 16Gb , Minimum:8Gb
-- Whisper Installation (Follow our wisper instalation guide)
+- Whisper Installation (Follow our whisper installation guide)
   
 ### Step 1: Create an Anaconda Environment Optional
 
