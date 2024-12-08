@@ -37,7 +37,7 @@
 
 ## Whats New 
 
-**NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'demo' branch.**
+**NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'windows' branch.**
 
 Updates:
 1) A Better Text-to-speech system using yapper-tts (https://github.com/n1teshy/yapper-tts) - custom human-friendly voice and playback speeds
