@@ -1,4 +1,4 @@
-# First High-Fidelity Prototype Development
+# Final Project Submission 
 
 ## **Project Title**
 **BlindSight: AI-Powered Voice-Driven File Navigation for the Visually Impaired**
@@ -6,6 +6,7 @@
 ---
 
 ## Table of Contents
+- [What's new](#Whats-New)
 - [Overview](#overview)
 - [Objectives](#Objectives)
 - [Prototype Features](#Prototype-Features)
@@ -34,6 +35,17 @@
 - [Future work](#Future-work)
 - [NOTE](#NOTE)
 
+## Whats New 
+
+**NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'demo' branch.**
+
+Updates:
+1) A Better Text-to-speech system using yapper-tts (https://github.com/n1teshy/yapper-tts) - custom human-friendly voice and playback speeds
+2) Space bar voice interrupt for the entire system
+3) Logging is added to capture and analyse errors and command history.
+
+**We feel that using custom voices and more human-like tone and playback speed will improve the Accessibility of our tool and make it more user-friendly and interactive. Similarly giving a space-bar interrupt with sound queues helps the blind person easily interrupt the TTS and STT when they feel overwhelmed.**
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 ## Overview
@@ -166,10 +178,10 @@ For each participant with consent we wil also take a screen recording of the ses
 These are the list of tasks that are currently in work and we will have ready for our final submission of he project
 1) expand command line features.
 2) Refine and add more document editing features.
-3) We will try to have a better Text to speach model with response speed control.
+3) We will try to have a better Text to speach model with response speed control.✅
 4) Reduce LLM dependence and add further verfication statergies.
-5) Multi Threading for the CLI command and Text to speach (this has allread been done for the dociment reader).
-6) We will add log files to evaluate the accuracy of the speach to text , text to speach and the LLM response for CLI tasks and document editing.
+5) Multi Threading for the CLI command and Text to speach (this has allread been done for the dociment reader).✅
+6) We will add log files to evaluate the accuracy of the speach to text , text to speach and the LLM response for CLI tasks and document editing.✅
 ---
 
 ## Set up instructions
