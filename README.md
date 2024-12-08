@@ -1,4 +1,4 @@
-# First High-Fidelity Prototype Development
+# Final Project Submission
 
 ## **Project Title**
 **BlindSight: AI-Powered Voice-Driven File Navigation for the Visually Impaired**
