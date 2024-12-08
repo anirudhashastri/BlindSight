@@ -37,7 +37,7 @@
 
 ## Whats New 
 
-**NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'demo' branch.**
+**NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'windows' branch.**
 
 Updates:
 1) A Better Text-to-speech system using yapper-tts (https://github.com/n1teshy/yapper-tts) - custom human-friendly voice and playback speeds
@@ -178,9 +178,9 @@ For each participant with consent we wil also take a screen recording of the ses
 These are the list of tasks that are currently in work and we will have ready for our final submission of he project
 1) expand command line features.
 2) Refine and add more document editing features.
-3) We will try to have a better Text to speach model with response speed control.✅
+3) We will try to have a better Text to speach model with response speed control.(Done and works for 'windows' branch)✅
 4) Reduce LLM dependence and add further verfication statergies.
-5) Multi Threading for the CLI command and Text to speach (this has allread been done for the dociment reader).✅
+5) Multi Threading for the CLI command and Text to speach (this has already been done for the document reader).✅
 6) We will add log files to evaluate the accuracy of the speach to text , text to speach and the LLM response for CLI tasks and document editing.✅
 ---
 
