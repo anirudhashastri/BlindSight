@@ -44,7 +44,7 @@ Updates:
 2) Space bar voice interrupt for the entire system
 3) Logging is added to capture and analyse errors and command history.
 
-** We feel that using custom voices and more human-like tone and playback speed will improve the Accessibility of our tool and make it more user-friendly and interactive. Similarly giving a space-bar interrupt with sound queues helps the blind person easily interrupt the TTS and STT when they feel overwhelmed.**
+**We feel that using custom voices and more human-like tone and playback speed will improve the Accessibility of our tool and make it more user-friendly and interactive. Similarly giving a space-bar interrupt with sound queues helps the blind person easily interrupt the TTS and STT when they feel overwhelmed.**
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Overview
