@@ -35,7 +35,7 @@
 - [Future work](#Future-work)
 - [NOTE](#NOTE)
 
-## Whats New? 
+## What's New? 
 
 **NOTE: Currently, the new accessibility changes only work on Windows Operating System (10,11) due to an issue with the yapper-tts package. To pull and run the new code on windows use the 'demo' branch.**
 
