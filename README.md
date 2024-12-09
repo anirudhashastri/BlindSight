@@ -7,6 +7,7 @@
 
 ## Table of Contents
 - [What's new](#Whats-New)
+- [Impact](#Impact)
 - [Overview](#overview)
 - [Objectives](#Objectives)
 - [Prototype Features](#Prototype-Features)
