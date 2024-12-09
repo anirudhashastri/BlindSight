@@ -45,6 +45,9 @@ Updates:
 3) Logging is added to capture and analyse errors and command history.
 
 **We feel that using custom voices and more human-like tone and playback speed will improve the Accessibility of our tool and make it more user-friendly and interactive. Similarly giving a space-bar interrupt with sound queues helps the blind person easily interrupt the TTS and STT when they feel overwhelmed.**
+
+**Impact of our tool on the world - canvas writeup** 
+- BlindSight makes the world a better place by empowering visually impaired individuals and people with disabilities to interact with technology independently and efficiently. By decreasing visual dependence on digital devices and control of file systems through intuitive voice commands, BlindSight fosters digital inclusivity and accessibility. It transforms complex, visual-dependent tasks—like file management and document editing into seamless, voice-driven experiences. This empowerment reduces reliance on sighted assistance, promoting self-sufficiency and confidence. Additionally, BlindSight’s focus on adaptive error handling and interactive learning makes technology more forgiving and user-friendly for people with varying abilities. By bridging the gap between accessibility and modern technology, BlindSight creates a world where independence is no longer a privilege, but a right for all.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Overview
