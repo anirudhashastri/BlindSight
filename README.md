@@ -119,7 +119,7 @@ The prototype interface has been carefully designed to meet accessibility requir
 ## Screenshots: Video
 Our project does not have any frontend interface (visual UI) as our whole project is build to help the visually disabled. Our interface is rooted in Text to speach and speach to text therefore we are adding a video link below to show how our system work for you reference. (Click on the image below for video)
 
-[![Watch the video](https://github.com/anirudhashastri/BlindSight/blob/f0b11d0b7f1c4581220d066dc7b0afce8633ebfc/images/thumbnail.png)](https://drive.google.com/file/d/1BgiYyjZuMDNfsKDdqT846kL3wrST9X9w/view?usp=sharing)
+[![Watch the video](https://github.com/anirudhashastri/BlindSight/blob/windows/images/thumbnail_windows.png)](https://drive.google.com/file/d/1BgiYyjZuMDNfsKDdqT846kL3wrST9X9w/view?usp=sharing)
 
 ---
 ## Tech Stack
